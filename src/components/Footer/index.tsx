@@ -8,7 +8,7 @@ interface footerProps {
 const Footer: React.FC<footerProps> = ({ style, ...props }) => {
     return (
         <footer style={style} {...props}>
-            Created with ❤️ by <a href='https://firmanasgani.id' target="_blank">Firmanagani</a>
+            Created with ❤️ by <a href='https://firmanasgani.id' rel='noopener' target="_blank">Firmanagani</a>
         </footer>
     );
 }
