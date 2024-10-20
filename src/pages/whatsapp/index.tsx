@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import LayoutPage from "../general";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 interface WhatsappNumber {
   phone_number: string;
@@ -53,10 +54,10 @@ const WhatsappNumberPage = () => {
   return (
     <LayoutPage>
       <div className="p-6 bg-white rounded-lg shadow-md mb-4 flex flex-row items-center justify-between">
-        <h2 className="text-xl font-bold">WA Number</h2>
-        <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        <h2 className="text-xl font-bold">WA Number List</h2>
+        <Link to="/whatsapp-number/add" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
           Add number
-        </button>
+        </Link>
       </div>
       <Card>
         <table className="w-full">
@@ -83,18 +84,8 @@ const WhatsappNumberPage = () => {
                   {formatPhoneNumber(item.phone_number)}
                 </td>
                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <button className="text-red-600" onClick={() => deleteNumber(item.id)}>
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 inline"
-                      viewBox="0 0 20 20"
-                      fill="currentColor"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M10 18a8 8 0 100-16 8 8 0 000 16zm-1.414-9.414a1 1 0 011.414 0L10 10.586l1.414-1.414a1 1 0 111.414 1.414L11.414 12l1.414 1.414a1 1 0 01-1.414 1.414L10 13.414l-1.414 1.414a1 1 0 01-1.414-1.414L8.586 12 7.172 10.586a1 1 0 010-1.414z"
-                      />
-                    </svg>
+                  <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => deleteNumber(item.id)}>
+                    Hapus
                   </button>
                 </td>
               </tr>
