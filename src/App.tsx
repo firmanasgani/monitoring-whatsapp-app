@@ -5,6 +5,7 @@ import WhatsappNumberPage from "./pages/whatsapp";
 import WhatsappPhoneForm from "./pages/whatsapp/form";
 import TemplateMessage from "./pages/Template";
 import ApiToken from "./pages/ApiToken";
+import MessageTemplateForm from "./pages/Template/form";
 
 function App() {
   return (
@@ -63,6 +64,17 @@ function App() {
         }
       />
 
+<Route
+        path="/message-template/add"
+        element={
+          localStorage.getItem("token") === null ? (
+            <Navigate to="/login" />
+          ) : (
+            <MessageTemplateForm />
+          )
+        }
+      />
+
       <Route
         path="/api-token"
         element={
@@ -80,14 +92,18 @@ function App() {
 function Home() {
   return (
     <div className="flex items-center flex-col justify-center h-screen bg-gray-100">
-      <h1 className="text-4xl font-bold text-blue-500">Hello, Tailwind!</h1>
+      <h1 className="text-4xl font-bold text-blue-500">Hello, Guest!</h1>
       <br />
       <p className="text-blue-500">
         Click{" "}
         <a href="/login" className="text-red-500">
           here
         </a>{" "}
-        to login
+        to login and click  {" "}
+        <a href="/dashboard" className="text-red-500">
+          here
+        </a>{" "}
+        to go to dashboard
       </p>
     </div>
   );
