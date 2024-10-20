@@ -54,9 +54,6 @@ function LoginPage() {
             }
             className="mt-1 block w-full p-2 border border-gray-300 rounded"
           />
-          {emailError && (
-            <p className="text-red-500">Please enter a valid email address</p>
-          )}
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Password</label>
@@ -68,6 +65,10 @@ function LoginPage() {
             }
             className="mt-1 block w-full p-2 border border-gray-300 rounded"
           />
+
+          {emailError && (
+            <p className="text-red-500">Email or password is incorrect.</p>
+          )}
         </div>
         <button
           type="submit"

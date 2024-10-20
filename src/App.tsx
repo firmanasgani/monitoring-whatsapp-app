@@ -1,5 +1,7 @@
 import { Route, Routes, Navigate } from 'react-router-dom';
 import LoginPage from './pages/Login';
+import DashboardPage from './pages/Dashboard';
+import WhatsappNumberPage from './pages/whatsapp';
 
 function App() {
   return (
@@ -9,7 +11,17 @@ function App() {
         path="/"
         element={localStorage.getItem('token') === null ? <Navigate to="/login" /> : <Home />}
       />
+
+  <Route
+        path="/dashboard"
+        element={localStorage.getItem('token') === null ? <Navigate to="/login" /> : <DashboardPage />}
+      />
+      <Route
+        path="/whatsapp-number"
+        element={localStorage.getItem('token') === null ? <Navigate to="/login" /> : <WhatsappNumberPage />}
+      />
     </Routes>
+    
   );
 }
 
