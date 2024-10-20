@@ -3,6 +3,8 @@ import LoginPage from "./pages/Login";
 import DashboardPage from "./pages/Dashboard";
 import WhatsappNumberPage from "./pages/whatsapp";
 import WhatsappPhoneForm from "./pages/whatsapp/form";
+import TemplateMessage from "./pages/Template";
+import ApiToken from "./pages/ApiToken";
 
 function App() {
   return (
@@ -46,6 +48,28 @@ function App() {
             <Navigate to="/login" />
           ) : (
             <WhatsappPhoneForm />
+          )
+        }
+      />
+
+      <Route
+        path="/message-template"
+        element={
+          localStorage.getItem("token") === null ? (
+            <Navigate to="/login" />
+          ) : (
+            <TemplateMessage />
+          )
+        }
+      />
+
+      <Route
+        path="/api-token"
+        element={
+          localStorage.getItem("token") === null ? (
+            <Navigate to="/login" />
+          ) : (
+            <ApiToken />
           )
         }
       />

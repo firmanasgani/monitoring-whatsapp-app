@@ -9,7 +9,7 @@ const Sidebar: React.FC<SidebarProps> = ({ style, ...props }) => {
   return (
     <aside style={style} {...props}>
       <div className="p-6">
-        <h1 className="text-2xl font-bold mb-6">App Name</h1>
+        <h1 className="text-2xl font-bold mb-6">WA Notif</h1>
         <ul className="space-y-4">
           <li>
             <Link to="/dashboard" className="block text-sm font-semibold hover:bg-black hover:text-white hover:rounded-md">
