@@ -15,24 +15,42 @@ const WhatsappNumberPage = () => {
     return phoneNumberFormatted;
   };
   const [data, setData] = useState<WhatsappNumber[]>([]);
+  const [loading, setLoading] = useState(true)
 
   React.useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      axios
-        .get(`${process.env.REACT_APP_API_URL}/api/whatsapp`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((response) => {
-          setData(response.data.data);
-        })
-        .catch((error) => {
-          console.error("Fetch error:", error);
-        });
+    try {
+      if (token) {
+        axios
+          .get(`${process.env.REACT_APP_API_URL}/api/whatsapp`, {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          })
+          .then((response) => {
+            setData(response.data.data);
+          })
+          .catch((error) => {
+            console.error("Fetch error:", error);
+          });
+      }
+    }catch(err: any) {
+      console.error(err)
+    }finally {
+      setLoading(false)
     }
   }, []);
+
+
+  if(loading) {
+    return (
+      <LayoutPage>
+      <div className="fixed top-0 left-0 z-50 w-screen h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    </LayoutPage>
+    )
+  }
 
   const deleteNumber = (id: string) => {
     if (window.confirm('Are you sure you want to delete this number?')) {
@@ -44,7 +62,7 @@ const WhatsappNumberPage = () => {
             },
           })
           .then((response) => {
-            setData(data.filter((item) => item.id !== id));
+            window.location.reload()
           })
           .catch((error) => {
             console.error("Delete error:", error);
@@ -98,7 +116,7 @@ const WhatsappNumberPage = () => {
 };
 
 const Card = ({ children }: { children: React.ReactNode }) => {
-  return <div className="p-6 bg-white rounded-lg shadow-md">{children}</div>;
+  return   <div className="p-6 bg-white rounded-lg shadow-md overflow-y-auto">{children}</div>;
 };
 
 export default WhatsappNumberPage;

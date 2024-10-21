@@ -6,6 +6,7 @@ import WhatsappPhoneForm from "./pages/whatsapp/form";
 import TemplateMessage from "./pages/Template";
 import ApiToken from "./pages/ApiToken";
 import MessageTemplateForm from "./pages/Template/form";
+import ApiTokenForm from "./pages/ApiToken/form";
 
 function App() {
   return (
@@ -82,6 +83,19 @@ function App() {
             <Navigate to="/login" />
           ) : (
             <ApiToken />
+          )
+        }
+      />
+
+
+      
+<Route
+        path="/api-token/add"
+        element={
+          localStorage.getItem("token") === null ? (
+            <Navigate to="/login" />
+          ) : (
+            <ApiTokenForm />
           )
         }
       />
