@@ -7,17 +7,27 @@ const Header = () => {
     React.useEffect(() => {
         const token = localStorage.getItem('token')
         if (token) {
-            axios.get(`${process.env.REACT_APP_API_URL}/api/users/me`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
-            .then(response => {
-                setUserFullName(response.data.data.full_name)
-            })
-            .catch(error => {
-                console.error("Header error:", error)
-            })
+            const dateExpired = new Date(JSON.parse(atob(token.split('.')[1])).exp * 1000);
+            const today = new Date();
+            if (dateExpired <= today) {
+                localStorage.removeItem('token');
+                window.location.href = '/login';
+            } else {
+                axios.get(`${process.env.REACT_APP_API_URL}/api/users/me`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                })
+                .then(response => {
+                    setUserFullName(response.data.data.full_name)
+                    if(response.data.data.email === process.env.REACT_APP_ADMIN_EMAIL) {
+                        localStorage.setItem('administrator', true)
+                    }
+                })
+                .catch(error => {
+                    console.error("Header error:", error)
+                })
+            }
         }
     }, [])
 

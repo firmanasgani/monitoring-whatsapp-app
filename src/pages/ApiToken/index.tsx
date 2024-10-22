@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import LayoutPage from "../general";
 import React, { useState } from "react";
 import axios from "axios";
+import { Card as BaseCard, CardTable } from "../../components/Card";
 
 interface api_token {
   id: string;
@@ -12,9 +13,9 @@ interface api_token {
 const ApiToken = () => {
   const [data, setData] = useState<api_token[]>([]);
   const [loading, setLoading] = useState(true);
-  
+
   React.useEffect(() => {
-      const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token");
     try {
       if (token) {
         axios
@@ -48,21 +49,25 @@ const ApiToken = () => {
   }
 
   const handleInactive = (id: string) => {
-    if (window.confirm("Are you sure you want to set this token to active or inactive?")) {
-        // Add delete logic here
-        axios
-          .put(`${process.env.REACT_APP_API_URL}/api/openapi/${id}`, null, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem('token')}`,
-            },
-          })
-          .then((response) => {
-            window.location.reload();
-          })
-          .catch((error) => {
-            console.error("Delete error:", error);
-          });
-      }
+    if (
+      window.confirm(
+        "Are you sure you want to set this token to active or inactive?"
+      )
+    ) {
+      // Add delete logic here
+      axios
+        .put(`${process.env.REACT_APP_API_URL}/api/openapi/${id}`, null, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        })
+        .then((response) => {
+          window.location.reload();
+        })
+        .catch((error) => {
+          console.error("Delete error:", error);
+        });
+    }
   };
 
   const handleDelete = (id: string) => {
@@ -71,7 +76,7 @@ const ApiToken = () => {
       axios
         .delete(`${process.env.REACT_APP_API_URL}/api/openapi/${id}`, {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
         })
         .then((response) => {
@@ -84,7 +89,7 @@ const ApiToken = () => {
   };
   return (
     <LayoutPage>
-      <div className="p-6 bg-white rounded-lg shadow-md mb-4 flex flex-row items-center justify-between">
+      <BaseCard>
         <h2 className="text-xl font-bold">Token List</h2>
         <Link
           to="/api-token/add"
@@ -92,9 +97,9 @@ const ApiToken = () => {
         >
           Add Token
         </Link>
-      </div>
-      <div className="p-6 bg-white rounded-lg shadow-md overflow-y-auto">
-        <table className="w-full">
+      </BaseCard>
+      <CardTable>
+      <table className="w-full">
           <thead>
             <tr>
               <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -152,7 +157,7 @@ const ApiToken = () => {
             ))}
           </tbody>
         </table>
-      </div>
+      </CardTable>
     </LayoutPage>
   );
 };

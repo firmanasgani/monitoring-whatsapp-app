@@ -18,7 +18,7 @@ function App() {
           localStorage.getItem("token") === null ? (
             <Navigate to="/login" />
           ) : (
-            <Home />
+            <DashboardPage />
           )
         }
       />

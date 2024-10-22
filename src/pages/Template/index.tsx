@@ -5,8 +5,10 @@ import axios from "axios";
 
 interface template_message {
   id: string;
-  template_name: string;
-  template_body: string;
+  name: string;
+  body: string;
+  contentsid: string;
+  status: string;
 }
 
 const TemplateMessage = () => {
@@ -86,7 +88,13 @@ const TemplateMessage = () => {
                 contentSid
               </th>
               <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                content Variable
+                name
+              </th>
+              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                body
+              </th>
+              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                status
               </th>
               <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                 Action
@@ -100,24 +108,37 @@ const TemplateMessage = () => {
                   {index + 1}
                 </td>
                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  {item.template_name}
+                  {item.contentsid}
                 </td>
                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  {item.template_body}
+                  {item.name}
                 </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 flex flex-row gap-2 justify-between">
-                  <Link
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                  {item.body}
+                </td>
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                  {item.status}
+                </td>
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200  gap-2">
+                <button
+                    onClick={() => deleteTemplate(item.id)}
+                    className="text-gray-500 hover:text-gray-700"
+                  >
+                    View
+                  </button>
+                 {item.status === 'approved' ? '' :  <Link
                     to={`/message-template/edit/${item.id}`}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                    className="text-blue-500 hover:text-blue-700"
                   >
                     Edit
-                  </Link>
+                  </Link>}
                   <button
                     onClick={() => deleteTemplate(item.id)}
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                    className="text-red-500 hover:text-red-700"
                   >
                     Delete
                   </button>
+
                 </td>
               </tr>
             ))}

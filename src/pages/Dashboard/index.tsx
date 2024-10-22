@@ -35,21 +35,26 @@ const DashboardPage = () => {
       <div className="p-6 bg-white rounded-lg shadow-md mb-4 flex flex-row items-center justify-between">
         <h2 className="text-xl font-bold">Dashboard</h2>
       </div>
-      <div className="flex flex-row gap-4 items-center max-w-[100%]">
+      <div className="flex flex-row gap-4 w-full flex-nowrap items-center">
 
-        <div className="p-6 bg-white rounded-lg min-w-[25%]  shadow-md mb-4 flex flex-col justify-between">
+        <div className="p-6 bg-white rounded-lg  shadow-md mb-4 flex flex-col justify-between">
           <h2 className="text-xl font-bold">{count.whatsapp}</h2>
           <Link to='/whatsapp-number'>Nomor whatsapp</Link>
         </div>
 
-        <div className="p-6 bg-white rounded-lg min-w-[25%]  shadow-md mb-4 flex flex-col justify-between">
+        <div className="p-6 bg-white rounded-lg   shadow-md mb-4 flex flex-col justify-between">
           <h2 className="text-xl font-bold">{count.message_template}</h2>
           <Link to='/message-template'>template tersedia</Link>
         </div>
 
-        <div className="p-6 bg-white rounded-lg min-w-[25%]  shadow-md mb-4 flex flex-col justify-between">
+        <div className="p-6 bg-white rounded-lg  shadow-md mb-4 flex flex-col justify-between">
           <h2 className="text-xl font-bold">{count.api_token}</h2>
-          <Link to='/message-template'> Token Tersedia</Link>
+          <Link to='/message-template'> Token Aktif</Link>
+        </div>
+        
+        <div className="p-6 bg-white rounded-lg shadow-md mb-4 flex flex-col justify-between">
+          <h2 className="text-xl font-bold">{count.api_token}</h2>
+          <Link to='/message-template'> Pesan Template</Link>
         </div>
       
       </div>
