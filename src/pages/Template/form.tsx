@@ -1,9 +1,16 @@
 import { Link } from "react-router-dom";
 import LayoutPage from "../general";
 import React, { useState } from "react";
+import axios from "axios";
 
 const MessageTemplateForm = () => {
   const [parameters, setParameters] = useState<string[]>([]);
+  const [data, setData] = useState({
+    name: "",
+    body: "",
+    category: "utility",
+    parameter: "",
+  });
 
   const addParameter = () => {
     setParameters([...parameters, ""]);
@@ -19,6 +26,58 @@ const MessageTemplateForm = () => {
     setParameters(newParameters);
   };
 
+  const countParameterInSentence = (sentence: string) => {
+    const words = sentence.split(" ");
+    return words.filter((word) => word.startsWith(":")).length;
+  };
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    let paramOnWords = countParameterInSentence(data.body);
+    if (paramOnWords !== parameters.length) {
+      alert(
+        "Parameter tidak sesuai. Pastikan kamu menandakan parameter di body dengan tanda : "
+      );
+      return;
+    }
+    if (!data.body || data.body === "") {
+      alert("Body cannot empty");
+      return;
+    }
+
+    if (!data.name || data.name === "") {
+      alert("Name cannot empty");
+      return;
+    }
+
+    const parametersJson = JSON.stringify(
+      Object.fromEntries(parameters.map((v, i) => [`${i + 1}`, v]))
+    );
+
+    const formData = {
+      ...data,
+      parameter: parametersJson,
+    };
+    console.log(formData);
+    try {
+      const token = localStorage.getItem("token");
+      axios
+        .post(`${process.env.REACT_APP_API_URL}/message/template`, formData, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => {
+          if (res.data.msg === "success") {
+            alert("Success add template");
+            window.location.href = "/message-template";
+          }
+        });
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
   return (
     <LayoutPage>
       <div className="p-6 bg-white rounded-lg shadow-md mb-4 flex flex-row items-center justify-between">
@@ -31,12 +90,18 @@ const MessageTemplateForm = () => {
         </Link>
       </div>
       <div className="p-6 bg-white rounded-lg shadow-md mb-4 flex flex-col justify-between">
-        <code className="text-red-400 mb-4">Perhatian! Harap tulis isi parameter pada text sesuai ketentuan. Jika anda ingin membuat parameter untuk suhu, maka ketik ":suhu" pada isi pesan.</code>
-        <form>
+        <code className="text-red-400 mb-4">
+          Perhatian! Harap tulis isi parameter pada text sesuai ketentuan. Jika
+          anda ingin membuat parameter untuk suhu, maka ketik ":suhu" pada isi
+          pesan.
+        </code>
+        <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label>Nama Template:</label>
             <input
               type="text"
+              value={data.name}
+              onChange={(e) => setData({ ...data, name: e.target.value })}
               placeholder="Pengecekan suhu"
               className="mt-1 block w-full p-2 border border-gray-300 rounded"
             />
@@ -46,8 +111,23 @@ const MessageTemplateForm = () => {
             <input
               type="text"
               placeholder="Peringatan! suhu pada device :nama sampai :temperature derajat"
+              value={data.body}
+              onChange={(e) => setData({ ...data, body: e.target.value })}
               className="mt-1 block w-full p-2 border border-gray-300 rounded"
             />
+          </div>
+          <div className="mb-4">
+            <div className="mb-4">
+              <label>Tipe template:</label>
+              <select
+                className="mt-1 block w-full p-2 border border-gray-300 rounded"
+                value={data.category}
+                onChange={(e) => setData({ ...data, category: e.target.value })}
+              >
+                <option value="utility">Utility</option>
+                <option value="marketing">Marketing</option>
+              </select>
+            </div>
           </div>
           <div className="mb-4">
             <button
@@ -60,7 +140,6 @@ const MessageTemplateForm = () => {
           </div>
           {parameters.map((parameter, index) => (
             <div key={index} className="mb-4 flex flex-row items-center">
-            
               <input
                 type="text"
                 placeholder="Parameter variable"
@@ -77,7 +156,7 @@ const MessageTemplateForm = () => {
               </button>
             </div>
           ))}
-         
+
           <div className="mb-4">
             <button
               type="submit"
@@ -93,4 +172,3 @@ const MessageTemplateForm = () => {
 };
 
 export default MessageTemplateForm;
-

@@ -11,6 +11,7 @@ const Header = () => {
             const today = new Date();
             if (dateExpired <= today) {
                 localStorage.removeItem('token');
+                localStorage.removeItem('administrator')
                 window.location.href = '/login';
             } else {
                 axios.get(`${process.env.REACT_APP_API_URL}/api/users/me`, {
@@ -35,6 +36,7 @@ const Header = () => {
     const logout = () => {
         if (window.confirm('Are you sure you want to logout?')) {
             localStorage.removeItem('token')
+            localStorage.removeItem('administrator')
             window.location.href = '/login'
         }
     }

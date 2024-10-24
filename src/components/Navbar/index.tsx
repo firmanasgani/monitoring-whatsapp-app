@@ -6,6 +6,7 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ style, ...props }) => {
+  const isAdmin = localStorage.getItem('administrator')
   return (
     <aside style={style} {...props}>
       <div className="p-6">
@@ -31,6 +32,13 @@ const Sidebar: React.FC<SidebarProps> = ({ style, ...props }) => {
               API Token
             </Link>
           </li>
+          {isAdmin ? (
+            <li>
+              <Link to="/message-approval" className="block text-sm font-semibold hover:bg-black hover:text-white hover:rounded-md">
+                Message Approval
+              </Link>
+            </li>
+          ) : ''}
         </ul>
       </div>
     </aside>

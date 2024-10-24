@@ -96,7 +96,7 @@ const TemplateMessage = () => {
               <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                 status
               </th>
-              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 w-[140px] text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                 Action
               </th>
             </tr>
@@ -117,27 +117,45 @@ const TemplateMessage = () => {
                   {item.body}
                 </td>
                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  {item.status}
+                  {item.status === 'approved' ? (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      {item.status}
+                    </span>
+                  ) : item.status === 'rejected' ? (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                      {item.status}
+                    </span>
+                  ) : item.status === 'on requested' ? (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                      {item.status}
+                    </span>
+                  ) : (
+                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                      {item.status}
+                    </span>
+                  )}
                 </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200  gap-2">
-                <button
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                  <div className="flex flex-row gap-4">
+                  <button
                     onClick={() => deleteTemplate(item.id)}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="text-gray-500 text-xs hover:text-gray-700"
                   >
                     View
                   </button>
                  {item.status === 'approved' ? '' :  <Link
                     to={`/message-template/edit/${item.id}`}
-                    className="text-blue-500 hover:text-blue-700"
+                    className="text-blue-500 text-xs hover:text-blue-700"
                   >
                     Edit
                   </Link>}
                   <button
                     onClick={() => deleteTemplate(item.id)}
-                    className="text-red-500 hover:text-red-700"
+                    className="text-red-500 text-xs hover:text-red-700"
                   >
                     Delete
                   </button>
+                    </div>
 
                 </td>
               </tr>
