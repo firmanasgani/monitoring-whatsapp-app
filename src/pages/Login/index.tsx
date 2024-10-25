@@ -18,7 +18,6 @@ function LoginPage() {
       axios
         .post(`${process.env.REACT_APP_API_URL}/api/users/login`, loginForm)
         .then((response) => {
-          console.log(response.data);
           if (response.data.data) {
             localStorage.setItem("token", response.data.data.accessToken);
             window.location.href = "/dashboard";

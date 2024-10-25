@@ -8,6 +8,9 @@ import ApiToken from "./pages/ApiToken";
 import MessageTemplateForm from "./pages/Template/form";
 import ApiTokenForm from "./pages/ApiToken/form";
 import MessageApprovalPage from "./pages/MessageApproval";
+import NotFoundPage from "./pages/NotFound";
+import TemplateDetailPage from "./pages/Template/detail"
+import MessageTemplateUpdate from "./pages/MessageApproval/MessageUpdate";
 
 function App() {
   return (
@@ -66,6 +69,17 @@ function App() {
         }
       />
 
+<Route
+        path="/message-template/view/:id"
+        element={
+          localStorage.getItem("token") === null ? (
+            <Navigate to="/login" />
+          ) : (
+            <TemplateDetailPage />
+          )
+        }
+      />
+
       <Route
         path="/message-template/add"
         element={
@@ -113,15 +127,24 @@ function App() {
         }
       />
 
-      <Route
-        path="/api-token/add"
+      
+<Route
+        path="/message-approval/update/:id"
         element={
-          localStorage.getItem("token") === null ? (
-            <Navigate to="/login" />
+          localStorage.getItem("token") !== null &&
+          localStorage.getItem("administrator") === "true" ? (
+            <MessageTemplateUpdate />
+          ) : localStorage.getItem("token") !== null ? (
+            <Navigate to="/not-found" />
           ) : (
-            <ApiTokenForm />
+            <Navigate to="/login" />
           )
         }
+      />
+
+      <Route
+        path="*"
+        element={<NotFoundPage />}
       />
     </Routes>
   );
@@ -130,3 +153,4 @@ function App() {
 
 
 export default App;
+

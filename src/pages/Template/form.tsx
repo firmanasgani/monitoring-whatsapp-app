@@ -58,7 +58,6 @@ const MessageTemplateForm = () => {
       ...data,
       parameter: parametersJson,
     };
-    console.log(formData);
     try {
       const token = localStorage.getItem("token");
       axios

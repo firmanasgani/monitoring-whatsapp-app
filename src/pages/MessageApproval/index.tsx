@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Card, CardTable } from "../../components/Card";
 import LayoutPage from "../general";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 interface template_message {
     id: string;
@@ -100,12 +101,13 @@ const MessageApprovalPage = () => {
                     {message.status}
                   </td>
                   <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
-                    <button
+                   
+                    <Link
+                      to={`/message-approval/update/${message.id}`}
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    
                     >
                       Update
-                    </button>
+                    </Link>
                   </td>
                 </tr>
               ))}

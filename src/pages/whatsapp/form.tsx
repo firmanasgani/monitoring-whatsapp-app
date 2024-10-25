@@ -29,7 +29,6 @@ const WhatsappPhoneForm = () => {
         },
       })
       .then((response) => {
-        console.log(response.data.message);
         if (response.data.message) {
           alert("Success add number");
 
