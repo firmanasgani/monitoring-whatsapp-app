@@ -137,12 +137,12 @@ const TemplateMessage = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                   <div className="flex flex-row gap-4">
-                  <Link
+                  {item.status === 'approved' ? ( <Link
                     to={`/message-template/view/${item.contentsid}`}
                     className="text-gray-500 text-xs hover:text-gray-700"
                   >
                     View
-                  </Link>
+                  </Link>): ""}
                
                   <button
                     onClick={() => deleteTemplate(item.id)}
