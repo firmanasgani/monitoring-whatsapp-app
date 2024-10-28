@@ -22,9 +22,12 @@ const TemplateDetailPage = () => {
   const [template, setTemplate] = useState<template_message | null>(null);
   const [detailTemplate, setDetailTemplate] = useState<dt_template_message[] | []>([])
   const [loading, setLoading] = useState(true);
-  const [tokenTemplate, setTokenTemplate] = useState('')
-  const [secretKey, setSecretKey] = useState('')
-  const [parameterTemplate, setParameterTemplate] = useState('')
+  const [formTemplate, setFormTemplate] = useState({
+    secret_key: '',
+    token: '',
+    parameter: '',
+    contentsid: ''
+  })
 
 
 
@@ -32,13 +35,19 @@ const TemplateDetailPage = () => {
     const token = localStorage.getItem("token");
     if (token && id) {
       axios
-        .get(`${process.env.REACT_APP_API_URL}/message/template/${id}`, {
+        .get(`${process.env.REACT_APP_API_URL}/message/template/contentsid/${id}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
         })
         .then((response) => {
           setTemplate(response.data.data);
+          setFormTemplate({
+            contentsid: response.data.data.contentsid,
+            token: '',
+            secret_key: '',
+            parameter: '', 
+          })
           setDetailTemplate(response.data.detail)
         })
         .catch((error) => {
@@ -72,18 +81,12 @@ const TemplateDetailPage = () => {
 
   const handleTemplateTesting = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const formData = new FormData();
-    formData.append('contentsid', template.contentsid)
-    formData.append('token', tokenTemplate)
-    formData.append('secret_key', secretKey)
-    formData.append('parameter', parameterTemplate)
-  
+    console.log(formTemplate.contentsid)
 
     const token = localStorage.getItem("token");
     if (token) {
       axios
-        .post(`${process.env.REACT_APP_API_URL}/api/messages`, formData)
+        .post(`${process.env.REACT_APP_API_URL}/api/messages`, formTemplate)
         .then((response) => {
           if (response.data.message) {
             alert(response.data.message);
@@ -173,8 +176,8 @@ const TemplateDetailPage = () => {
                 <input
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="secretKey"
-                  value={secretKey}
-                  onChange={(e) => setSecretKey(e.target.value)}
+                  value={formTemplate.secret_key}
+                  onChange={(e) => setFormTemplate({...formTemplate, secret_key: e.target.value})}
                   type="text"
                   placeholder="2#%434$353t4y,4646/62646426"
                 />
@@ -186,8 +189,8 @@ const TemplateDetailPage = () => {
                 <input
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="token"
-                  value={tokenTemplate}
-                  onChange={(e) => setTokenTemplate(e.target.value)}
+                  value={formTemplate.token}
+                  onChange={(e) => setFormTemplate({...formTemplate, token: e.target.value})}
                   type="text"
                   placeholder="FEefefdvfg4r343cfef"
                 />
@@ -200,7 +203,7 @@ const TemplateDetailPage = () => {
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="contentSid"
                   type="text"
-                  value={template.contentsid}
+                  value={formTemplate.contentsid}
                   readOnly={true}
                   placeholder="25fdfSDFDGR342xKVJ"
                 />
@@ -212,8 +215,8 @@ const TemplateDetailPage = () => {
                 <input
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   id="parameter"
-                  value={parameterTemplate}
-                  onChange={(e) => setParameterTemplate(e.target.value)}
+                  value={formTemplate.parameter}
+                  onChange={(e) => setFormTemplate({...formTemplate, parameter: e.target.value})}
                   type="text"
                   placeholder="{'1':'42','2':'24'}"
                   required

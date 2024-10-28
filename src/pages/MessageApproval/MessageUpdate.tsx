@@ -29,7 +29,7 @@ const MessageTemplateUpdate = () => {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token && id) {
+    if (token) {
       axios
         .get(`${process.env.REACT_APP_API_URL}/message/template/${id}`, {
           headers: {
@@ -37,6 +37,7 @@ const MessageTemplateUpdate = () => {
           },
         })
         .then((response) => {
+          console.log(response.data)
           setTemplate(response.data.data);
           setDetailTemplate(response.data.detail);
         })
