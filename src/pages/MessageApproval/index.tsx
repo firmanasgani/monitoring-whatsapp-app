@@ -8,6 +8,7 @@ interface template_message {
     id: string;
     name: string;
     body: string
+    contentsid: string
     category: string
     status: string
 }
@@ -103,7 +104,7 @@ const MessageApprovalPage = () => {
                   <td className="px-6 py-4 whitespace-no-wrap text-sm leading-5 text-gray-900">
                    
                     <Link
-                      to={`/message-approval/update/${message.id}`}
+                      to={`/message-approval/update/${message.contentsid}`}
                       className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                     >
                       Update
