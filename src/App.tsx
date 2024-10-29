@@ -11,6 +11,7 @@ import MessageApprovalPage from "./pages/MessageApproval";
 import NotFoundPage from "./pages/NotFound";
 import TemplateDetailPage from "./pages/Template/detail"
 import MessageTemplateUpdate from "./pages/MessageApproval/MessageUpdate";
+import MessagePage from "./pages/Message";
 
 function App() {
   return (
@@ -90,6 +91,17 @@ function App() {
           )
         }
       />
+
+      <Route
+        path="/message" 
+        element={
+          localStorage.getItem('token') === null ? (
+            <Navigate to="/login" />
+          ) : (
+            <MessagePage />
+          )
+        }
+        />
 
       <Route
         path="/api-token"

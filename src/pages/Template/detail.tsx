@@ -88,14 +88,13 @@ const TemplateDetailPage = () => {
       axios
         .post(`${process.env.REACT_APP_API_URL}/api/messages`, formTemplate)
         .then((response) => {
-          if (response.data.message) {
-            alert(response.data.message);
-          } else {
-            alert("Failed to send testing message");
-          }
+        
+            alert("Success to send testing message")
+         
         })
         .catch((error) => {
           console.error("Test template error:", error);
+          alert('Error test template')
         });
     }
   };
@@ -219,7 +218,6 @@ const TemplateDetailPage = () => {
                   onChange={(e) => setFormTemplate({...formTemplate, parameter: e.target.value})}
                   type="text"
                   placeholder="{'1':'42','2':'24'}"
-                  required
                 />
               </div>
               <div className="flex flex-row justify-end w-full">
