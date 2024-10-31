@@ -26,6 +26,36 @@ const MessagePage = () => {
     new URLSearchParams(search).get("limit") ? Number(new URLSearchParams(search).get("limit")) : 10
   );
 
+  
+  const reloadData = () => {
+    const token = localStorage.getItem("token");
+    setLoading(true);
+    try {
+      if (token) {
+        axios
+          .get(
+            `${process.env.REACT_APP_API_URL}/twilio?page=${page}&limit=${limit}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          )
+          .then((response) => {
+            setData(response.data.data);
+          })
+          .catch((error) => {
+            console.error("Fetch error:", error);
+          })
+          .finally(() => {
+            setLoading(false);
+          });
+      }
+    } catch (err: any) {
+      console.error(err);
+    }
+  };
+
   useEffect(() => {
     const token = localStorage.getItem("token");
     setLoading(true);
@@ -69,6 +99,14 @@ const MessagePage = () => {
     <LayoutPage>
       <Card>
         <h1>Histori Pesan</h1>
+        <div className="flex justify-end mt-4">
+          <button
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            onClick={() => reloadData() }
+          >
+            Reload
+          </button>
+        </div>
       </Card>
       <CardTable>
         <table className="w-full">
