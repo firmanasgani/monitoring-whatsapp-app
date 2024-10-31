@@ -90,12 +90,6 @@ const MessagePage = () => {
                 date updated
               </th>
               <th className="px-6 py-3 w-[140px] text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                price
-              </th>
-              <th className="px-6 py-3 w-[140px] text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                error message
-              </th>
-              <th className="px-6 py-3 w-[140px] text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                 status
               </th>
             </tr>
@@ -103,28 +97,22 @@ const MessagePage = () => {
           <tbody>
             {data.map((item, index) => (
               <tr key={index}>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm">
                   {index + 1}
                 </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm">
                   {item.body}
                 </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm">
                   {item.direction}
                 </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm">
                   {item.to}
                 </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  {new Date(new Date(item.dateUpdated).getTime() + 7 * 60 * 60 * 1000).toLocaleString("en-US")}
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm">
+                  {new Date(new Date(item.dateUpdated).getTime()).toLocaleString("en-US")}
                 </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  {item.price}
-                </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  {item.errorMessage}
-                </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm">
                   {item.status}
                 </td>
               </tr>
