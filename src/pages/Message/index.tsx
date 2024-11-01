@@ -7,6 +7,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 interface history_message {
   body: string;
   direction: string;
+  from: string;
   to: string;
   dateUpdated: string;
   price: string;
@@ -122,6 +123,9 @@ const MessagePage = () => {
                 direction
               </th>
               <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                from
+              </th>
+              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
                 to
               </th>
               <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -143,6 +147,9 @@ const MessagePage = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm">
                   {item.direction}
+                </td>
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm">
+                  {item.from}
                 </td>
                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm">
                   {item.to}
