@@ -28,6 +28,11 @@ const Sidebar: React.FC<SidebarProps> = ({ style, ...props }) => {
             </Link>
           </li>
           <li>
+            <Link to="/message-db" className='block text-sm font-semibold hover:bg-black hover:text-white hover:rounded-md'>
+              Message History from database
+            </Link>
+          </li>
+          <li>
             <Link to="/message" className='block text-sm font-semibold hover:bg-black hover:text-white hover:rounded-md'>
               History
             </Link>

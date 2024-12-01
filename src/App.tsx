@@ -12,6 +12,7 @@ import NotFoundPage from "./pages/NotFound";
 import TemplateDetailPage from "./pages/Template/detail"
 import MessageTemplateUpdate from "./pages/MessageApproval/MessageUpdate";
 import MessagePage from "./pages/Message";
+import { MessageDB } from "./pages/MessageDB";
 
 function App() {
   return (
@@ -99,6 +100,17 @@ function App() {
             <Navigate to="/login" />
           ) : (
             <MessagePage />
+          )
+        }
+        />
+
+<Route
+        path="/message-db" 
+        element={
+          localStorage.getItem('token') === null ? (
+            <Navigate to="/login" />
+          ) : (
+            <MessageDB />
           )
         }
         />
