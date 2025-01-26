@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import LayoutPage from "../general";
-import React, { useState } from "react";
-import axios from "axios";
+import  { useEffect,useState } from "react";
+import { MessageTemplateData, MessageTemplateDataDelete } from "../../data/messageTemplate";
+import { MESSAGE_TEMPLATE_PAGE_ADD, MESSAGE_TEMPLATE_PAGE } from '../../utils/variables/urlPath'
 
 interface template_message {
   id: string;
@@ -15,27 +16,17 @@ const TemplateMessage = () => {
   const [data, setData] = useState<template_message[]>([]);
   const [loading, setLoading] = useState(true);
 
-  React.useEffect(() => {
-    const token = localStorage.getItem("token");
+  async function fetchData() {
+    const response = await MessageTemplateData();
+    setData(response);
+  }
+  useEffect(() => {
     try {
-        if (token) {
-            axios
-              .get(`${process.env.REACT_APP_API_URL}/message/template`, {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              })
-              .then((response) => {
-                setData(response.data.data);
-              })
-              .catch((error) => {
-                console.error("Fetch error:", error);
-              });
-          }
-    }catch(err: any) {
-        console.error(err)
-    }finally {
-        setLoading(false)
+      fetchData()
+    }catch(error: any) {
+      console.error(error);
+    }finally{
+      setLoading(false);
     }
   }, []);
 
@@ -49,20 +40,14 @@ const TemplateMessage = () => {
     )
   }
 
-  const deleteTemplate = (id: string) => {
+  const deleteTemplate = async(id: string) => {
     if (window.confirm("Are you sure you want to delete this template?")) {
-      axios
-        .delete(`${process.env.REACT_APP_API_URL}/message/template/${id}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
-        .then((response) => {
-          window.location.reload()
-        })
-        .catch((error) => {
-          console.error("Delete error:", error);
-        });
+     const response = await MessageTemplateDataDelete(id)
+     if(response) {
+       fetchData()
+     }else {
+      console.error("Error deleting template")
+     }
     }
   };
   return (
@@ -70,7 +55,7 @@ const TemplateMessage = () => {
       <div className="p-6 bg-white rounded-lg shadow-md mb-4 flex flex-row items-center justify-between">
         <h2 className="text-xl font-bold">Message template List</h2>
         <Link
-          to="/message-template/add"
+          to={MESSAGE_TEMPLATE_PAGE_ADD}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
           Add template
@@ -81,22 +66,22 @@ const TemplateMessage = () => {
         <table className="w-full">
           <thead>
             <tr>
-              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase text-sm tracking-wider">
                 #
               </th>
-              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase text-sm  tracking-wider">
                 contentSid
               </th>
-              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase text-sm  tracking-wider">
                 name
               </th>
-              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase text-sm tracking-wider">
                 body
               </th>
-              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase text-sm tracking-wider">
                 status
               </th>
-              <th className="px-6 py-3 w-[140px] text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 w-[140px] text-left text-xs leading-4 font-medium text-gray-500 text-sm uppercase tracking-wider">
                 Action
               </th>
             </tr>
@@ -104,19 +89,19 @@ const TemplateMessage = () => {
           <tbody className="bg-white">
             {data.map((item, index) => (
               <tr key={index}>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                <td className="px-6 py-4 whitespace-no-wrap text-sm  border-b border-gray-200">
                   {index + 1}
                 </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                <td className="px-6 py-4 whitespace-no-wrap text-sm border-b border-gray-200">
                   {item.contentsid}
                 </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                <td className="px-6 py-4 whitespace-no-wrap text-sm border-b border-gray-200">
                   {item.name}
                 </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                <td className="px-6 py-4 whitespace-no-wrap text-sm border-b border-gray-200">
                   {item.body}
                 </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                <td className="px-6 py-4 whitespace-no-wrap text-sm border-b border-gray-200">
                   {item.status === 'approved' ? (
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                       {item.status}
@@ -138,7 +123,7 @@ const TemplateMessage = () => {
                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                   <div className="flex flex-row gap-4">
                   {item.status === 'approved' ? ( <Link
-                    to={`/message-template/view/${item.id}`}
+                    to={`${MESSAGE_TEMPLATE_PAGE}/view/${item.id}`}
                     className="text-gray-500 text-xs hover:text-gray-700"
                   >
                     View

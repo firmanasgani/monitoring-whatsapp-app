@@ -59,5 +59,27 @@ export const WHATSAPP_DELETE:Endpoint = {
     methods: 'DELETE'
 }
 
+export const MESSAGE_TEMPLATE_GET_ALL: Endpoint = {
+    url: baseURL+'/message/template',
+    methods: 'GET'
+}
 
+export const MESSAGE_TEMPLATE_POST: Endpoint = {
+    url: baseURL+'/message/template',
+    methods: 'POST'
+}
 
+export const MESSAGE_TEMPLATE_DELETE: Endpoint = {
+    url: baseURL+'/message/template/:id',
+    methods: 'DELETE'
+}
+
+export const MESSAGE_TEMPLATE_SEND_POST: Endpoint = {
+    url: baseURL+'/api/messages',
+    methods: 'POST' 
+}
+
+export const MESSAGE_TEMPLATE_CONTENT_SID_GET: Endpoint = {
+    url: baseURL+'/message/template/contentsid/:id',
+    methods: 'GET'
+}
