@@ -1,0 +1,7 @@
+export const LOGIN_PAGE = '/login'
+export const DEFAULT_PAGE = '/'
+export const DASHBOARD_PAGE = '/dashboard'
+export const WHATSAPP_NUMBER_PAGE = '/whatsapp-number'
+export const ADD_WHATSAPP_PAGE = '/whatsapp-number/add'
+export const MESSAGE_LOGS = '/message/database'
+export const MESSAGE_TEMPLATE_PAGE = '/message-template'
