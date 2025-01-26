@@ -1,7 +1,10 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import LayoutPage from "../general";
-import axios from "axios";
 import { Link } from "react-router-dom";
+import { WhatsappDeleteData, WhatsappNumberData } from "../../data/whatsappNumber";
+import { CardTable } from "../../components/Card";
+import { apiInterceptors } from "../../utils/apiInterceptors";
+import { WHATSAPP_DELETE } from "../../utils/variables/endpoint";
 
 interface WhatsappNumber {
   phone_number: string;
@@ -17,23 +20,14 @@ const WhatsappNumberPage = () => {
   const [data, setData] = useState<WhatsappNumber[]>([]);
   const [loading, setLoading] = useState(true)
 
-  React.useEffect(() => {
-    const token = localStorage.getItem("token");
+  async function fetchData(){
+    const result = await WhatsappNumberData()
+    setData(result)
+  }
+
+  useEffect(() => {
     try {
-      if (token) {
-        axios
-          .get(`${process.env.REACT_APP_API_URL}/api/whatsapp`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then((response) => {
-            setData(response.data.data);
-          })
-          .catch((error) => {
-            console.error("Fetch error:", error);
-          });
-      }
+     fetchData()
     }catch(err: any) {
       console.error(err)
     }finally {
@@ -52,22 +46,16 @@ const WhatsappNumberPage = () => {
     )
   }
 
-  const deleteNumber = (id: string) => {
+  const deleteNumber = async(id: string) => {
     if (window.confirm('Are you sure you want to delete this number?')) {
         // Add delete logic here
-        axios
-          .delete(`${process.env.REACT_APP_API_URL}/api/whatsapp/${id}`, {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-          })
-          .then((response) => {
-            window.location.reload()
-          })
-          .catch((error) => {
-            console.error("Delete error:", error);
-          });
+       try {
+         await WhatsappDeleteData(id)
+         fetchData()
+       }catch(err: any) {
+         console.error(err)
     }
+  }
 }
   return (
     <LayoutPage>
@@ -77,7 +65,7 @@ const WhatsappNumberPage = () => {
           Add number
         </Link>
       </div>
-      <Card>
+      <CardTable>
         <table className="w-full">
           <thead>
             <tr>
@@ -93,16 +81,24 @@ const WhatsappNumberPage = () => {
             </tr>
           </thead>
           <tbody className="bg-white">
-            {data.map((item, index) => (
+            {data.length ===0 ? (
+              <tr>
+                <td colSpan={3} className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-center">
+                  No data available
+                </td>
+                
+              </tr>
+            ) :
+            data.map((item, index) => (
               <tr key={index}>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm">
                   {index + 1}
                 </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 text-sm">
                   {formatPhoneNumber(item.phone_number)}
                 </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded" onClick={() => deleteNumber(item.id)}>
+                <td className="px-4 py-2 whitespace-no-wrap border-b border-gray-200 text-sm">
+                  <button className="bg-red-500 hover:bg-red-700 text-white py-1 px-2 rounded text-sm" onClick={() => deleteNumber(item.id)}>
                     Hapus
                   </button>
                 </td>
@@ -110,13 +106,10 @@ const WhatsappNumberPage = () => {
             ))}
           </tbody>
         </table>
-      </Card>
+      </CardTable>
     </LayoutPage>
   );
 };
 
-const Card = ({ children }: { children: React.ReactNode }) => {
-  return   <div className="p-6 bg-white rounded-lg shadow-md overflow-y-auto">{children}</div>;
-};
 
 export default WhatsappNumberPage;
