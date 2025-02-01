@@ -12,6 +12,5 @@ export function formaterURL(url: string, params?: Record<string, string | number
             .join("&");
         url = `${url}?${queryString}`;
     }
-
     return url
 }

@@ -75,11 +75,41 @@ export const MESSAGE_TEMPLATE_DELETE: Endpoint = {
 }
 
 export const MESSAGE_TEMPLATE_SEND_POST: Endpoint = {
-    url: baseURL+'/api/messages',
+    url: baseURL+'/messages',
     methods: 'POST' 
 }
 
 export const MESSAGE_TEMPLATE_CONTENT_SID_GET: Endpoint = {
     url: baseURL+'/message/template/contentsid/:id',
     methods: 'GET'
+}
+
+export const MESSAGE_FROM_DATABASE_GET: Endpoint = {
+    url: baseURL+'/messages',
+    methods: 'GET'
+}
+
+export const TOKEN_API_GET_LIST: Endpoint = {
+    url: baseURL+'/openapi',
+    methods: 'GET'
+}
+
+export const TOKEN_API_ADD_POST: Endpoint = {
+    url: baseURL+'/openapi',
+    methods: 'POST'
+}
+
+export const TOKEN_API_INACTIVE_PUT: Endpoint = {
+    url: baseURL+'/openapi/:id',
+    methods: 'PUT'
+}
+
+export const TOKEN_API_ACTIVE_PUT: Endpoint = {
+    url: baseURL+'/openapi/set-active/:id',
+    methods: 'PUT'
+}
+
+export const TOKEN_API_DELETE: Endpoint = {
+    url: baseURL+'/openapi/:id',
+    methods: 'DELETE'
 }

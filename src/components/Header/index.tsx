@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { apiInterceptors } from "../../utils/apiInterceptors";
-import { PROFILE_GET } from "../../utils/variables/endpoint";
 import { ProfileData } from "../../data/profile";
+import { Link } from "react-router-dom";
+import { PROFILE_PAGE } from "../../utils/variables/urlPath";
 
 const Header = () => {
   const [userFullName, setUserFullName] = useState("");
@@ -57,7 +57,9 @@ const Header = () => {
       <div className="flex items-center">
         <div className="hidden md:block">
           <div className="text-white-700 font-semibold py-2 px-4 rounded inline-flex items-center">
-            <span>{userFullName}</span>
+            <Link to={PROFILE_PAGE}>
+              <span>{userFullName}</span>
+            </Link>
           </div>
           <div
             onClick={logout}

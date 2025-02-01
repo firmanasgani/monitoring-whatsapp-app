@@ -7,11 +7,11 @@ const DashboardPage = () => {
   const [count, setCount] = useState({
     whatsapp: {
       today: 0,
-      current: 0,
+      yesterday: 0,
     },
     message: {
       today: 0,
-      current: 0,
+      yesterday: 0,
     },
     message_template: 0,
     api_token: 0,
@@ -41,7 +41,7 @@ const DashboardPage = () => {
       <div className="flex flex-row gap-4 w-full flex-nowrap items-center">
         <Card>
           <div className="flex flex-col gap-2">
-            <h2 className="text-xl font-bold">{count.message.current}</h2>
+            <h2 className="text-xl font-bold">{count.message.yesterday}</h2>
             <p className="font-semibold text-gray-600">Pesan Terkirim</p>
             <div className="mt-auto">
               <p className="text-sm font-semibold text-gray-600">
@@ -52,7 +52,7 @@ const DashboardPage = () => {
         </Card>
         <Card>
           <div className="flex flex-col gap-2">
-            <h2 className="text-xl font-bold">{count.whatsapp.current}</h2>
+            <h2 className="text-xl font-bold">{count.whatsapp.yesterday}</h2>
             <p className="font-semibold text-gray-600">Nomor Terdaftar</p>
             <div className="mt-auto">
               <p className="text-sm font-semibold text-gray-600">

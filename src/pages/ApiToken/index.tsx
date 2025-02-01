@@ -1,8 +1,14 @@
 import { Link } from "react-router-dom";
 import LayoutPage from "../general";
 import React, { useState } from "react";
-import axios from "axios";
-import { Card as BaseCard, CardTable } from "../../components/Card";
+import { CardTable } from "../../components/Card";
+import {
+  ApiTokenData,
+  ApiTokenDataDelete,
+  SetActiveApiToken,
+  SetInactiveApiToken,
+} from "../../data/apiToken";
+import { API_TOKEN_PAGE } from "../../utils/variables/urlPath";
 
 interface api_token {
   id: string;
@@ -14,23 +20,15 @@ const ApiToken = () => {
   const [data, setData] = useState<api_token[]>([]);
   const [loading, setLoading] = useState(true);
 
+  async function fetchData() {
+    const result = await ApiTokenData();
+    setData(result);
+  }
+
   React.useEffect(() => {
-    const token = localStorage.getItem("token");
     try {
-      if (token) {
-        axios
-          .get(`${process.env.REACT_APP_API_URL}/api/openapi`, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then((response) => {
-            setData(response.data);
-          })
-          .catch((error) => {
-            console.error("Fetch error:", error);
-          });
-      }
+      setLoading(true)
+      fetchData();
     } catch (err: any) {
       console.log(err);
     } finally {
@@ -48,58 +46,59 @@ const ApiToken = () => {
     );
   }
 
-  const handleInactive = (id: string) => {
+  const handleInactive = async (id: string) => {
     if (
-      window.confirm(
-        "Are you sure you want to set this token to active or inactive?"
-      )
+      window.confirm("Are you sure you want to set this token to inactive?")
     ) {
       // Add delete logic here
-      axios
-        .put(`${process.env.REACT_APP_API_URL}/api/openapi/${id}`, null, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
-        .then((response) => {
-          window.location.reload();
-        })
-        .catch((error) => {
-          console.error("Delete error:", error);
-        });
+      const result = await SetInactiveApiToken(id);
+      if (result.msg === "success") {
+        alert("Token has been set to inactive");
+        fetchData();
+      } else {
+        alert("Failed to set token to inactive");
+      }
     }
   };
 
-  const handleDelete = (id: string) => {
+  const handleActive = async (id: string) => {
+    if (window.confirm("Are you sure you want to set this token to active?")) {
+      // Add delete logic here
+      const result = await SetActiveApiToken(id);
+      if (result.msg === "success") {
+        alert("Token has been set to active");
+        fetchData();
+      } else {
+        alert("Failed to set token to active");
+      }
+    }
+  };
+
+  const handleDelete = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this token?")) {
       // Add delete logic here
-      axios
-        .delete(`${process.env.REACT_APP_API_URL}/api/openapi/${id}`, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        })
-        .then((response) => {
-          window.location.reload();
-        })
-        .catch((error) => {
-          console.error("Delete error:", error);
-        });
+      const result = await ApiTokenDataDelete(id);
+      if (result.msg === "success") {
+        alert("Token has been deleted");
+        fetchData();
+      } else {
+        alert("Failed to delete token");
+      }
     }
   };
   return (
     <LayoutPage>
-      <BaseCard>
+      <div className="p-6 bg-white rounded-lg shadow-md mb-4 flex flex-row gap-2 justify-between">
         <h2 className="text-xl font-bold">Token List</h2>
         <Link
-          to="/api-token/add"
+          to={API_TOKEN_PAGE + "/add"}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
           Add Token
         </Link>
-      </BaseCard>
+      </div>
       <CardTable>
-      <table className="w-full">
+        <table className="w-full">
           <thead>
             <tr>
               <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -142,9 +141,13 @@ const ApiToken = () => {
                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 flex flex-row gap-2 justify-between">
                   <button
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    onClick={() => handleInactive(item.id)}
+                    onClick={() =>
+                      item.is_active === 1
+                        ? handleInactive(item.id)
+                        : handleActive(item.id)
+                    }
                   >
-                    Set {item.is_active ? "inactive" : "active"}
+                    {item.is_active === 1 ? "inactive" : "active"}
                   </button>
                   <button
                     onClick={() => handleDelete(item.id)}

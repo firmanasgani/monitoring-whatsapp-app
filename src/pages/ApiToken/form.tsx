@@ -1,7 +1,8 @@
 import { useState } from "react";
 import LayoutPage from "../general";
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { ApiTokenDataPost } from "../../data/apiToken";
+import { API_TOKEN_PAGE } from "../../utils/variables/urlPath";
 
 const ApiTokenForm = () => {
   const [expired, setExpired] = useState(true);
@@ -17,35 +18,25 @@ const ApiTokenForm = () => {
     expired_at: "",
   });
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const token = localStorage.getItem("token");
-      if (token) {
-        const dateExpired = new Date(data.expired_at);
-        const today = new Date();
-        if (dateExpired <= today) {
-          setError(true);
-          return;
-        }
 
-        axios
-          .post(`${process.env.REACT_APP_API_URL}/api/openapi`, data, {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          .then((response) => {
-            setPostData(true);
-            setDataAfterPost({
-              api_key: response.data.data.api_key,
-              secret_key: response.data.data.secret_key,
-              is_active: response.data.data.is_active,
-              expired_at: response.data.data.expired_at,
-            });
-          });
-      }
-    } catch (err: any) {
+     const result = await ApiTokenDataPost(data);
+     const res = result.data
+     
+
+     if(result) {
+      setError(false);
+      setPostData(true);
+      setDataAfterPost({
+        api_key: res.api_key,
+        secret_key: res.secret_key,
+        is_active: res.is_active, 
+        expired_at: res.expired_at,
+       });
+     }
+     } catch (err: any) {
       console.error(err);
     }
   };
@@ -62,7 +53,7 @@ const ApiTokenForm = () => {
         <div className="flex flex-row items-center justify-between">
           <h2 className="text-xl font-bold">Token Form</h2>
           <Link
-            to="/api-token"
+            to={API_TOKEN_PAGE}
             className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
           >
             Back

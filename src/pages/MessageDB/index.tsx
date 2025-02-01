@@ -1,34 +1,23 @@
 import LayoutPage from "../general";
 import { useState, useEffect } from "react";
-import axios from "axios";
 import { Card, CardTable } from "../../components/Card";
-
+import { MessageDataHistories } from "../../data/messages";
 export const MessageDB = () => {
   const [data, setData] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
+  
+
+  async function fetchData(page: number, limit: number) {
+    console.log(page)
+    const response = await MessageDataHistories({ page, limit });
+    setTotal(response.total)
+    setData(response.data)
+  }
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      axios
-        .get(
-          `${process.env.REACT_APP_API_URL}/api/messages?page=${page}&limit=${limit}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        )
-        .then((response) => {
-          setData(response.data.data);
-          setTotal(response.data.total);
-        })
-        .catch((error) => {
-          console.error("Dashboard error:", error);
-        });
-    }
+    fetchData(page,limit)
   }, [page, limit]);
 
   const handleSelectLimit = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -39,7 +28,7 @@ export const MessageDB = () => {
     <LayoutPage>
       <div className="message-db"></div>
       <Card>
-        <h1>Histori Pesan yang terkirim (dari DB: {total})</h1>
+        <h1>Histori Pesan yang terkirim: {total.toLocaleString()} pesan</h1>
       </Card>
       <CardTable>
         <table className="w-full h-[350px]">
@@ -79,7 +68,7 @@ export const MessageDB = () => {
                   )}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
-                  {new Date(item.created_at).toLocaleString("en-GB", { timeZone: "UTC" })}
+                  {new Date(item.created_at).toLocaleString("en-US", { timeZone: "UTC" })}
                 </td>
               
               </tr>
@@ -88,16 +77,18 @@ export const MessageDB = () => {
         </table>
      
       </CardTable>
-      <div className="flex flex-row justify-center">
+      <div className="flex flex-row w-full justify-between">
           <select
-            className="py-2 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+            className="py-2 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-32"
             onChange={handleSelectLimit}
           >
             <option value="10">10</option>
             <option value="20">20</option>
             <option value="30">30</option>
             <option value="50">50</option>
+            <option value="100">100</option>
           </select>
+          <div>
           <button
             className="py-2 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
             onClick={() => setPage(page - 1)}
@@ -109,12 +100,13 @@ export const MessageDB = () => {
             Page {page} of {Math.ceil(total / limit)}
           </span>
           <button
-            className="py-2 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+            className="py-2 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-16"
             onClick={() => setPage(page + 1)}
             disabled={page === Math.ceil(total / limit)}
           >
             Next
           </button>
+          </div>
         </div>
     </LayoutPage>
   );

@@ -13,7 +13,8 @@ import TemplateDetailPage from "./pages/Template/detail"
 import MessageTemplateUpdate from "./pages/MessageApproval/MessageUpdate";
 import MessagePage from "./pages/Message";
 import { MessageDB } from "./pages/MessageDB";
-import { DEFAULT_PAGE, DASHBOARD_PAGE, LOGIN_PAGE, MESSAGE_LOGS } from "./utils/variables/urlPath";
+import { DEFAULT_PAGE, DASHBOARD_PAGE, LOGIN_PAGE, MESSAGE_LOGS, PROFILE_PAGE } from "./utils/variables/urlPath";
+import { ProfilePage } from "./pages/Profile";
 
 function App() {
   const token = localStorage.getItem("access_token");
@@ -30,6 +31,17 @@ function App() {
           )
         }
       />
+
+      <Route
+        path={PROFILE_PAGE}
+        element={
+          token === null ? (
+            <Navigate to={LOGIN_PAGE} />
+            ) : (
+              <ProfilePage />
+            )
+        }
+        />
 
       <Route
         path={DASHBOARD_PAGE}
