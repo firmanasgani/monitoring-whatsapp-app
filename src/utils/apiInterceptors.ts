@@ -1,29 +1,32 @@
-export const apiInterceptors = (history: any) => ({
-  request: [
-    (config: any) => {
-      const token = localStorage.getItem('jwt');
-      if (token && config.url !== '/login') {
-        config.headers = {
-          Authorization: `Bearer ${token}`,
-          ...config.headers,
-        };
-      }
-      return config;
-    },
-  ],
-  response: [
-    (response: any) => {
-      if (response.data.jwt) {
-        localStorage.setItem('jwt', response.data.jwt);
-      }
-      return response;
-    },
-    (error: any) => {
-      if (error.response.status === 401) {
-        localStorage.removeItem('jwt');
-        history.push('/login');
-      }
-      return Promise.reject(error);
-    },
-  ],
-});
+import axios from "axios";
+import { Endpoint } from "./variables/endpoint";
+import { formaterURL } from "./helpers/urlFormatter";
+
+
+export async function apiInterceptors (
+  endpoint: Endpoint,
+  body?: any,
+  params?: Record<string, string | number>,
+  query?: Record<string, string | number | boolean>
+){
+  const token = localStorage.getItem("access_token");
+  const formatURL = formaterURL(endpoint.url, params, query);
+
+  try {
+    const response = await axios({
+      url: formatURL,
+      method: endpoint.methods,
+      headers: {
+        Authorization: token ?  `Bearer ${token}` : '',
+        'Content-Type': 'application/json', 
+      },
+      data: body,
+    })
+
+    return response.data
+  }catch(error: any){
+    console.error(error)
+  }
+
+
+}

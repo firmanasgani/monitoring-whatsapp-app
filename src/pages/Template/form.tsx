@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import LayoutPage from "../general";
 import React, { useState } from "react";
 import axios from "axios";
+import { MessageTemplateDataPost } from "../../data/messageTemplate";
+import { MESSAGE_TEMPLATE_PAGE } from "../../utils/variables/urlPath";
 
 const MessageTemplateForm = () => {
   const [parameters, setParameters] = useState<string[]>([]);
@@ -31,7 +33,7 @@ const MessageTemplateForm = () => {
     return words.filter((word) => word.startsWith(":")).length;
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     let paramOnWords = countParameterInSentence(data.body);
     if (paramOnWords !== parameters.length) {
@@ -59,19 +61,14 @@ const MessageTemplateForm = () => {
       parameter: parametersJson,
     };
     try {
-      const token = localStorage.getItem("token");
-      axios
-        .post(`${process.env.REACT_APP_API_URL}/message/template`, formData, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        })
-        .then((res) => {
-          if (res.data.msg === "success") {
-            alert("Success add template");
-            window.location.href = "/message-template";
-          }
-        });
+      const response = await MessageTemplateDataPost(formData)
+      console.log(response)
+      if (response.msg === "success") {
+        alert("Success")
+        window.location.href = MESSAGE_TEMPLATE_PAGE
+      }else {
+        alert("Failed")
+      }
     } catch (err: any) {
       console.error(err);
     }
@@ -82,7 +79,7 @@ const MessageTemplateForm = () => {
       <div className="p-6 bg-white rounded-lg shadow-md mb-4 flex flex-row items-center justify-between">
         <h2 className="text-xl font-bold">Template message</h2>
         <Link
-          to="/message-template"
+          to={MESSAGE_TEMPLATE_PAGE}
           className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
         >
           Back

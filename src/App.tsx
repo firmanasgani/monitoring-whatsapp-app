@@ -13,16 +13,19 @@ import TemplateDetailPage from "./pages/Template/detail"
 import MessageTemplateUpdate from "./pages/MessageApproval/MessageUpdate";
 import MessagePage from "./pages/Message";
 import { MessageDB } from "./pages/MessageDB";
+import { DEFAULT_PAGE, DASHBOARD_PAGE, LOGIN_PAGE, MESSAGE_LOGS, PROFILE_PAGE } from "./utils/variables/urlPath";
+import { ProfilePage } from "./pages/Profile";
 
 function App() {
+  const token = localStorage.getItem("access_token");
   return (
     <Routes>
-      <Route path="/login" element={<LoginPage />} />
+      <Route path={LOGIN_PAGE} element={ token === null ? <LoginPage /> : <DashboardPage />} />
       <Route
-        path="/"
+        path={DEFAULT_PAGE}
         element={
-          localStorage.getItem("token") === null ? (
-            <Navigate to="/login" />
+          token === null ? (
+            <Navigate to={LOGIN_PAGE} />
           ) : (
             <DashboardPage />
           )
@@ -30,9 +33,20 @@ function App() {
       />
 
       <Route
-        path="/dashboard"
+        path={PROFILE_PAGE}
         element={
-          localStorage.getItem("token") === null ? (
+          token === null ? (
+            <Navigate to={LOGIN_PAGE} />
+            ) : (
+              <ProfilePage />
+            )
+        }
+        />
+
+      <Route
+        path={DASHBOARD_PAGE}
+        element={
+          token=== null ? (
             <Navigate to="/login" />
           ) : (
             <DashboardPage />
@@ -42,7 +56,7 @@ function App() {
       <Route
         path="/whatsapp-number"
         element={
-          localStorage.getItem("token") === null ? (
+          token === null ? (
             <Navigate to="/login" />
           ) : (
             <WhatsappNumberPage />
@@ -52,7 +66,7 @@ function App() {
       <Route
         path="/whatsapp-number/add"
         element={
-          localStorage.getItem("token") === null ? (
+          token === null ? (
             <Navigate to="/login" />
           ) : (
             <WhatsappPhoneForm />
@@ -63,7 +77,7 @@ function App() {
       <Route
         path="/message-template"
         element={
-          localStorage.getItem("token") === null ? (
+          token === null ? (
             <Navigate to="/login" />
           ) : (
             <TemplateMessage />
@@ -74,7 +88,7 @@ function App() {
 <Route
         path="/message-template/view/:id"
         element={
-          localStorage.getItem("token") === null ? (
+          token === null ? (
             <Navigate to="/login" />
           ) : (
             <TemplateDetailPage />
@@ -85,7 +99,7 @@ function App() {
       <Route
         path="/message-template/add"
         element={
-          localStorage.getItem("token") === null ? (
+          token === null ? (
             <Navigate to="/login" />
           ) : (
             <MessageTemplateForm />
@@ -96,7 +110,7 @@ function App() {
       <Route
         path="/message" 
         element={
-          localStorage.getItem('token') === null ? (
+          token === null ? (
             <Navigate to="/login" />
           ) : (
             <MessagePage />
@@ -105,9 +119,9 @@ function App() {
         />
 
 <Route
-        path="/message-db" 
+        path={MESSAGE_LOGS}
         element={
-          localStorage.getItem('token') === null ? (
+          token === null ? (
             <Navigate to="/login" />
           ) : (
             <MessageDB />
@@ -118,7 +132,7 @@ function App() {
       <Route
         path="/api-token"
         element={
-          localStorage.getItem("token") === null ? (
+          token === null ? (
             <Navigate to="/login" />
           ) : (
             <ApiToken />
@@ -129,7 +143,7 @@ function App() {
       <Route
         path="/api-token/add"
         element={
-          localStorage.getItem("token") === null ? (
+          token === null ? (
             <Navigate to="/login" />
           ) : (
             <ApiTokenForm />
@@ -140,10 +154,10 @@ function App() {
       <Route
         path="/message-approval"
         element={
-          localStorage.getItem("token") !== null &&
+          token !== null &&
           localStorage.getItem("administrator") === "true" ? (
             <MessageApprovalPage />
-          ) : localStorage.getItem("token") !== null ? (
+          ) : token !== null ? (
             <Navigate to="/not-found" />
           ) : (
             <Navigate to="/login" />
@@ -155,10 +169,10 @@ function App() {
 <Route
         path="/message-approval/update/:id"
         element={
-          localStorage.getItem("token") !== null &&
+          token !== null &&
           localStorage.getItem("administrator") === "true" ? (
             <MessageTemplateUpdate />
-          ) : localStorage.getItem("token") !== null ? (
+          ) : token !== null ? (
             <Navigate to="/not-found" />
           ) : (
             <Navigate to="/login" />
@@ -173,8 +187,6 @@ function App() {
     </Routes>
   );
 }
-
-
 
 export default App;
 

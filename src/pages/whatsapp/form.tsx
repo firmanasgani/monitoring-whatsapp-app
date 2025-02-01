@@ -1,15 +1,15 @@
 import { Link } from "react-router-dom";
 import LayoutPage from "../general";
 import { useState } from "react";
-import axios from "axios";
+import { WhatsappAddData } from "../../data/whatsappNumber";
+import { WHATSAPP_NUMBER_PAGE } from "../../utils/variables/urlPath";
 
 const WhatsappPhoneForm = () => {
   const [error, setError] = useState(false);
-
   const [whatsappNumber, setWhatsappNumber] = useState({
     phone_number: "",
   });
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async(e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const reg = /^(\d{1,2})(\d{1,4})(\d{1,4})(\d{1,4})$/;
     if (!reg.test(whatsappNumber.phone_number)) {
@@ -22,26 +22,12 @@ const WhatsappPhoneForm = () => {
       return false;
     }
 
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/api/whatsapp`, whatsappNumber, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      })
-      .then((response) => {
-        if (response.data.message) {
-          alert("Success add number");
-
-          setTimeout(() => {
-            window.location.href = "/whatsapp-number";
-          }, 3000);
-        } else {
-          setError(true);
-        }
-      })
-      .catch((error) => {
-        setError(true);
-      });
+    const response = await WhatsappAddData(whatsappNumber.phone_number);
+    if(response) {
+      window.location.href = WHATSAPP_NUMBER_PAGE;
+    }else {
+      setError(true);
+    }
     return true;
   };
 
@@ -50,7 +36,7 @@ const WhatsappPhoneForm = () => {
       <div className="p-6 bg-white rounded-lg shadow-md mb-4 flex flex-row items-center justify-between">
         <h2 className="text-xl font-bold">WA Number</h2>
         <Link
-          to="/whatsapp-number"
+          to={WHATSAPP_NUMBER_PAGE}
           className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
         >
           Back
