@@ -10,7 +10,6 @@ export const MessageDB = () => {
   
 
   async function fetchData(page: number, limit: number) {
-    console.log(page)
     const response = await MessageDataHistories({ page, limit });
     setTotal(response.total)
     setData(response.data)

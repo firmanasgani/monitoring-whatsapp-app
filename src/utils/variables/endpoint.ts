@@ -19,6 +19,11 @@ export const DASHBOARD_GET:Endpoint = {
     methods: 'GET'
 }
 
+export const DASHBOARD_CHART_MESSAGE_GET: Endpoint = {
+    url: baseURL + '/dashboard/chart/message',
+    methods: 'GET'
+}
+
 export const PROFILE_GET:Endpoint = {
     url: baseURL + '/users/me',
     methods: 'GET'
@@ -112,4 +117,9 @@ export const TOKEN_API_ACTIVE_PUT: Endpoint = {
 export const TOKEN_API_DELETE: Endpoint = {
     url: baseURL+'/openapi/:id',
     methods: 'DELETE'
+}
+
+export const USERS_GET_LIST_ALL: Endpoint = {
+    url: baseURL+'/users',
+    methods: 'GET'
 }
