@@ -3,8 +3,6 @@ import LayoutPage from "../general";
 import { Link } from "react-router-dom";
 import { WhatsappDeleteData, WhatsappNumberData } from "../../data/whatsappNumber";
 import { CardTable } from "../../components/Card";
-import { apiInterceptors } from "../../utils/apiInterceptors";
-import { WHATSAPP_DELETE } from "../../utils/variables/endpoint";
 
 interface WhatsappNumber {
   phone_number: string;
