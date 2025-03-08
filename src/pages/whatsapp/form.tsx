@@ -3,6 +3,8 @@ import LayoutPage from "../general";
 import { useState } from "react";
 import { WhatsappAddData } from "../../data/whatsappNumber";
 import { WHATSAPP_NUMBER_PAGE } from "../../utils/variables/urlPath";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
 const WhatsappPhoneForm = () => {
   const [error, setError] = useState(false);
@@ -33,14 +35,15 @@ const WhatsappPhoneForm = () => {
 
   return (
     <LayoutPage>
-      <div className="p-6 bg-white rounded-lg shadow-md mb-4 flex flex-row items-center justify-between">
-        <h2 className="text-xl font-bold">WA Number</h2>
-        <Link
+      <div className="p-6 bg-white rounded-lg shadow-md mb-4 flex flex-row items-center gap-2">
+      <Link
           to={WHATSAPP_NUMBER_PAGE}
-          className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
-          Back
+          <FontAwesomeIcon icon={faArrowLeft} />
         </Link>
+        <h2 className="text-xl font-bold">WA Number</h2>
+        
       </div>
       <div className="p-6 bg-white rounded-lg shadow-md mb-4 flex flex-col  justify-between">
         <h2 className="text-xl font-bold">Form Tambah</h2>

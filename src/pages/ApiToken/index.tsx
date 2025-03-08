@@ -9,6 +9,8 @@ import {
   SetInactiveApiToken,
 } from "../../data/apiToken";
 import { API_TOKEN_PAGE } from "../../utils/variables/urlPath";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
 
 interface api_token {
   id: string;
@@ -27,7 +29,7 @@ const ApiToken = () => {
 
   React.useEffect(() => {
     try {
-      setLoading(true)
+      setLoading(true);
       fetchData();
     } catch (err: any) {
       console.log(err);
@@ -88,78 +90,99 @@ const ApiToken = () => {
   };
   return (
     <LayoutPage>
-      <div className="p-6 bg-white rounded-lg shadow-md mb-4 flex flex-row gap-2 justify-between">
-        <h2 className="text-xl font-bold">Token List</h2>
-        <Link
-          to={API_TOKEN_PAGE + "/add"}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Add Token
-        </Link>
+      <div className="p-6 bg-white rounded-lg shadow-md mb-4 flex flex-col justify-between">
+        <div className="flex flex-row items-center justify-between">
+          <Link
+            to="/whatsapp-number/add"
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            <FontAwesomeIcon icon={faPlus} /> Add Token
+          </Link>
+        </div>
       </div>
       <CardTable>
-        <table className="w-full">
-          <thead>
-            <tr>
-              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                #
-              </th>
-              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                API key
-              </th>
-              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                Date expired
-              </th>
-              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                is active
-              </th>
-              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                Action
-              </th>
-            </tr>
-          </thead>
-          <tbody className="bg-white">
-            {data.map((item, index) => (
-              <tr key={index}>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  {index + 1}
-                </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  {item.api_key}
-                </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  {item.expired_at &&
-                    new Intl.DateTimeFormat("en-GB", {
-                      day: "2-digit",
-                      month: "2-digit",
-                      year: "numeric",
-                    }).format(new Date(item.expired_at))}
-                </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
-                  {item.is_active === 1 ? "active" : "inactive"}
-                </td>
-                <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 flex flex-row gap-2 justify-between">
-                  <button
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-                    onClick={() =>
-                      item.is_active === 1
-                        ? handleInactive(item.id)
-                        : handleActive(item.id)
-                    }
-                  >
-                    {item.is_active === 1 ? "inactive" : "active"}
-                  </button>
-                  <button
-                    onClick={() => handleDelete(item.id)}
-                    className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
-                  >
-                    Delete
-                  </button>
-                </td>
+        <div className="p-6 w-full  flex flex-col justify-between">
+          <div className="flex flex-row items-center justify-between gap-2 mb-4">
+            <h1 className="text-xl">Token</h1>
+            <div className="flex flex-row items-center gap-2">
+              <select className="mt-1 block w-full p-2 border border-gray-300 rounded">
+                <option value="all">All</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+              <input
+                className="mt-1 block w-full p-2 border border-gray-300 rounded"
+                type="date"
+                placeholder="Search Number"
+              />
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <FontAwesomeIcon icon={faSearch} />
+              </button>
+            </div>
+          </div>
+          <table className="w-full">
+            <thead>
+              <tr>
+                <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  #
+                </th>
+                <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  API key
+                </th>
+                <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  Date expired
+                </th>
+                <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  is active
+                </th>
+                <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  Action
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody className="bg-white">
+              {data.map((item, index) => (
+                <tr key={index}>
+                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                    {index + 1}
+                  </td>
+                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                    {item.api_key}
+                  </td>
+                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                    {item.expired_at &&
+                      new Intl.DateTimeFormat("en-GB", {
+                        day: "2-digit",
+                        month: "2-digit",
+                        year: "numeric",
+                      }).format(new Date(item.expired_at))}
+                  </td>
+                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
+                    {item.is_active === 1 ? "active" : "inactive"}
+                  </td>
+                  <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200 flex flex-row gap-2 justify-between">
+                    <button
+                      className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                      onClick={() =>
+                        item.is_active === 1
+                          ? handleInactive(item.id)
+                          : handleActive(item.id)
+                      }
+                    >
+                      {item.is_active === 1 ? "inactive" : "active"}
+                    </button>
+                    <button
+                      onClick={() => handleDelete(item.id)}
+                      className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </CardTable>
     </LayoutPage>
   );

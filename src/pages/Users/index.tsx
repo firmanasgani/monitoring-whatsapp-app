@@ -4,6 +4,8 @@ import { USERS_PAGE } from "../../utils/variables/urlPath";
 import { useEffect, useState } from "react";
 import { UserData } from "../../data/users";
 import { CardTable } from "../../components/Card";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlus, faSearch } from "@fortawesome/free-solid-svg-icons";
 
 interface Users {
     username: string
@@ -14,7 +16,7 @@ interface Users {
 
 const UsersPage = () => {
     const [data, setData] = useState<Users[]>([]);
-    const [loading, setLoading] = useState(true);
+    
 
     async function fetchData() {
         const users = await UserData()
@@ -27,17 +29,36 @@ const UsersPage = () => {
 
   return (
     <LayoutPage>
-      <div className="p-6 bg-white rounded-lg shadow-md mb-4 flex flex-row items-center justify-between">
-        <h2 className="text-xl font-bold">List Users</h2>
-        <Link
-          to={USERS_PAGE + "/add"}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Add User
-        </Link>
-      </div>
+       <div className="p-6 bg-white rounded-lg shadow-md mb-4 flex flex-col justify-between">
+              <div className="flex flex-row items-center justify-between">
+                <Link
+                  to="/whatsapp-number/add"
+                  className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                >
+                  <FontAwesomeIcon icon={faPlus} /> Add Token
+                </Link>
+              </div>
+            </div>
       <CardTable>
-        <table className="w-full">
+      <div className="p-6 w-full  flex flex-col justify-between">
+         <div className="flex flex-row items-center justify-between gap-2 mb-4">
+                    <h1 className="text-xl">Token</h1>
+                    <div className="flex flex-row items-center gap-2">
+                      <select className="mt-1 block w-full p-2 border border-gray-300 rounded">
+                        <option value="all">All</option>
+                        <option value="client">Client</option>
+                        <option value="admin">Admin</option>
+                      </select>
+                      <input
+                        className="mt-1 block w-full p-2 border border-gray-300 rounded"
+                        placeholder="Search "
+                      />
+                      <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                        <FontAwesomeIcon icon={faSearch} />
+                      </button>
+                    </div>
+                  </div>
+      <table className="w-full">
           <thead>
             <tr>
               <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
@@ -98,6 +119,8 @@ const UsersPage = () => {
             ))}
           </tbody>
         </table>
+        </div>
+      
       </CardTable>
     </LayoutPage>
   );

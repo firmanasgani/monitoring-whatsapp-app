@@ -1,7 +1,6 @@
 import { Link } from "react-router-dom";
 import LayoutPage from "../general";
 import React, { useState } from "react";
-import axios from "axios";
 import { MessageTemplateDataPost } from "../../data/messageTemplate";
 import { MESSAGE_TEMPLATE_PAGE } from "../../utils/variables/urlPath";
 
