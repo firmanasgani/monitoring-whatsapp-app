@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import LayoutPage from "../general";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import {
   WhatsappDeleteData,
   WhatsappNumberData,
@@ -15,6 +15,7 @@ interface WhatsappNumber {
 }
 
 const WhatsappNumberPage = () => {
+
   const formatPhoneNumber = (phoneNumber: string) => {
     const reg = /^(\d{1,2})(\d{1,4})(\d{1,4})(\d{1,4})$/;
     const phoneNumberFormatted = phoneNumber.replace(reg, "+$1-$2-$3-$4");
@@ -22,43 +23,51 @@ const WhatsappNumberPage = () => {
   };
   const [data, setData] = useState<WhatsappNumber[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  async function fetchData() {
-    const result = await WhatsappNumberData();
-    setData(result);
+  async function fetchData(search: string) {
+    console.log('From fetch data', search);
+    const result = await WhatsappNumberData({search});
+    if(result) {
+      setData(result);
+    }else {
+      setData([]);
+    }
   }
-
   useEffect(() => {
+    const query = new URLSearchParams(location.search).get("search");
     try {
-      fetchData();
+      setLoading(true);
+      if(query) {
+        setSearch(query);
+      }
+    
+      fetchData(query || "");
     } catch (err: any) {
       console.error(err);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [location]);
 
-  if (loading) {
-    return (
-      <LayoutPage>
-        <div className="fixed top-0 left-0 z-50 w-screen h-screen flex items-center justify-center">
-          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
-        </div>
-      </LayoutPage>
-    );
-  }
 
   const deleteNumber = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this number?")) {
       // Add delete logic here
       try {
         await WhatsappDeleteData(id);
-        fetchData();
+        fetchData(search);
       } catch (err: any) {
         console.error(err);
       }
     }
   };
+  const handleSearch = (search: string) => {
+    console.log(search);
+    navigate(`?search=${search}`);
+  }
   return (
     <LayoutPage>
       <div className="p-6 bg-white rounded-lg shadow-md mb-4 flex flex-col justify-between">
@@ -79,8 +88,10 @@ const WhatsappNumberPage = () => {
               <input
                 className="mt-1 block w-full p-2 border border-gray-300 rounded"
                 placeholder="Search Number"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={() => handleSearch(search)}>  
                 <FontAwesomeIcon icon={faSearch} />
               </button>
             </div>
@@ -138,3 +149,4 @@ const WhatsappNumberPage = () => {
 };
 
 export default WhatsappNumberPage;
+
