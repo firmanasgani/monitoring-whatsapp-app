@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import LayoutPage from "../general";
 import React, { useState } from "react";
 import { CardTable } from "../../components/Card";
@@ -21,22 +21,36 @@ interface api_token {
 const ApiToken = () => {
   const [data, setData] = useState<api_token[]>([]);
   const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState<string>("");
+  const location = useLocation()
+  const navigate = useNavigate()
 
-  async function fetchData() {
-    const result = await ApiTokenData();
+  async function fetchData(status: string) {
+    const result = await ApiTokenData({
+      status
+    });
     setData(result);
   }
 
   React.useEffect(() => {
+    const statusQuery = new URLSearchParams(location.search).get("status");
+    if (statusQuery) {
+      setStatus(statusQuery);
+    }
+
     try {
       setLoading(true);
-      fetchData();
+      fetchData(statusQuery || "");
     } catch (err: any) {
       console.log(err);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [location]);
+
+  const handleSearch = () => {
+    navigate(`?status=${status}`);
+  }
 
   if (loading) {
     return (
@@ -56,7 +70,7 @@ const ApiToken = () => {
       const result = await SetInactiveApiToken(id);
       if (result.msg === "success") {
         alert("Token has been set to inactive");
-        fetchData();
+        navigate(`?status=${status}`);
       } else {
         alert("Failed to set token to inactive");
       }
@@ -69,7 +83,7 @@ const ApiToken = () => {
       const result = await SetActiveApiToken(id);
       if (result.msg === "success") {
         alert("Token has been set to active");
-        fetchData();
+        navigate(`?status=${status}`);
       } else {
         alert("Failed to set token to active");
       }
@@ -82,7 +96,7 @@ const ApiToken = () => {
       const result = await ApiTokenDataDelete(id);
       if (result.msg === "success") {
         alert("Token has been deleted");
-        fetchData();
+        navigate(`?status=${status}`);
       } else {
         alert("Failed to delete token");
       }
@@ -105,18 +119,15 @@ const ApiToken = () => {
           <div className="flex flex-row items-center justify-between gap-2 mb-4">
             <h1 className="text-xl">Token</h1>
             <div className="flex flex-row items-center gap-2">
-              <select className="mt-1 block w-full p-2 border border-gray-300 rounded">
-                <option value="all">All</option>
+              <select className="mt-1 block w-full p-2 border border-gray-300 rounded"
+                value={status}
+                onChange={(e) => setStatus(e.target.value)}>
+                <option value="">All</option>
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
               </select>
-              <input
-                className="mt-1 block w-full p-2 border border-gray-300 rounded"
-                type="date"
-                placeholder="Search Number"
-              />
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                <FontAwesomeIcon icon={faSearch} />
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleSearch}>
+                <FontAwesomeIcon icon={faSearch}  />
               </button>
             </div>
           </div>
@@ -141,6 +152,15 @@ const ApiToken = () => {
               </tr>
             </thead>
             <tbody className="bg-white">
+              {
+                data.length < 1 && (
+                  <tr>
+                    <td colSpan={5} className="text-center py-4">
+                      Data is not available
+                    </td>
+                  </tr>
+                )
+              }
               {data.map((item, index) => (
                 <tr key={index}>
                   <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
