@@ -28,7 +28,6 @@ const WhatsappNumberPage = () => {
   const navigate = useNavigate();
 
   async function fetchData(search: string) {
-    console.log('From fetch data', search);
     const result = await WhatsappNumberData({search});
     if(result) {
       setData(result);
@@ -65,8 +64,15 @@ const WhatsappNumberPage = () => {
     }
   };
   const handleSearch = (search: string) => {
-    console.log(search);
     navigate(`?search=${search}`);
+  }
+
+  if(loading) {
+    return <LayoutPage>
+      <div className="fixed top-0 left-0 z-50 w-screen h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-blue-500"></div>
+      </div>
+    </LayoutPage>
   }
   return (
     <LayoutPage>
