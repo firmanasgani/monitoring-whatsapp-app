@@ -1,9 +1,9 @@
 import { apiInterceptors } from "../utils/apiInterceptors"
 import { TOKEN_API_GET_LIST,TOKEN_API_ADD_POST, TOKEN_API_INACTIVE_PUT, TOKEN_API_ACTIVE_PUT, TOKEN_API_DELETE } from "../utils/variables/endpoint"
 
-export const ApiTokenData = async () => {
+export const ApiTokenData = async (query: Record<string, string | number>) => {
     try {
-        const response = await apiInterceptors(TOKEN_API_GET_LIST)
+        const response = await apiInterceptors(TOKEN_API_GET_LIST, {}, {}, query)
         return response
     }catch(error: any) {
         console.error(error)

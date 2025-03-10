@@ -4,25 +4,44 @@ import { Card, CardTable } from "../../components/Card";
 import { MessageDataHistories } from "../../data/messages";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch } from "@fortawesome/free-solid-svg-icons";
+import { useLocation, useNavigate } from "react-router-dom";
 export const MessageDB = () => {
   const [data, setData] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
+  const [dateCreated, setDateCreated] = useState<string>("");
+  const [searchBody, setSearchBody] = useState<string>("");
+  const location = useLocation()
+  const navigate = useNavigate()
 
-  async function fetchData(page: number, limit: number) {
-    const response = await MessageDataHistories({ page, limit });
+  async function fetchData(page: number, limit: number, dateCreated: string, searchBody: string) {
+    const response = await MessageDataHistories({ page, limit, date: dateCreated, search: searchBody });
     setTotal(response.total);
     setData(response.data);
   }
 
   useEffect(() => {
-    fetchData(page, limit);
-  }, [page, limit]);
+    const dateQuery = new URLSearchParams(location.search).get("date");
+    const searchQuery = new URLSearchParams(location.search).get("search");
+    if(dateQuery) {
+      setDateCreated(dateQuery);
+    }
+    if(searchQuery) {
+      setSearchBody(searchQuery);
+    }
+    fetchData(page, limit, dateCreated || '', searchBody || '');
+  }, [page, limit, location]);
+  
 
   const handleSelectLimit = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setLimit(parseInt(e.target.value, 10));
   };
+
+  const handleSearch = ()  => {
+    console.log(dateCreated)
+    navigate(`?date=${dateCreated}&search=${searchBody}`);
+  }
 
   return (
     <LayoutPage>
@@ -37,13 +56,18 @@ export const MessageDB = () => {
               <input
                 type="date"
                 className="mt-1 block w-full p-2 border border-gray-300 rounded"
+                value={dateCreated}
+                onChange={(e) => setDateCreated(e.target.value)}
               />
 
               <input
                 className="mt-1 block w-full p-2 border border-gray-300 rounded"
                 placeholder="Search Body"
+                value={searchBody}
+                onChange={(e) => setSearchBody(e.target.value)}
               />
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                onClick={handleSearch}>
                 <FontAwesomeIcon icon={faSearch} />
               </button>
             </div>
@@ -64,30 +88,29 @@ export const MessageDB = () => {
               </tr>
             </thead>
             <tbody>
-              {data.map((item, index) => (
-                <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
-                    {index + 1}
-                  </td>
-
-                  <td className="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
-                    {item.body.length > 100 ? (
-                      <>
-                        {item.body.substring(0, 100)}
-                        <br />
-                        {item.body.substring(100)}
-                      </>
-                    ) : (
-                      item.body
-                    )}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
-                    {new Date(item.created_at).toLocaleString("en-US", {
-                      timeZone: "Asia/Jakarta",
-                    })}
+              {data.length === 0 ? (
+                <tr>
+                  <td colSpan={3} className="text-center py-4">
+                    Data is not available
                   </td>
                 </tr>
-              ))}
+              ) : (
+                data.map((item, index) => (
+                  <tr key={index} className="bg-white border-b hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
+                      {index + 1}
+                    </td>
+                    <td className="px-6 py-4 break-words whitespace-normal text-sm leading-5 text-gray-900">
+                      {item.body}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
+                      {new Date(item.created_at).toLocaleString("en-US", {
+                        timeZone: "Asia/Jakarta",
+                      })}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import LayoutPage from "../general";
 import { useEffect, useState } from "react";
 import {
@@ -13,6 +13,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEye,
   faPlus,
+  faRefresh,
   faSearch,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
@@ -28,12 +29,20 @@ interface template_message {
 const TemplateMessage = () => {
   const [data, setData] = useState<template_message[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState<string>("");
+  const [status, setStatus] = useState<string>("");
+  const location = useLocation()
+  const navigate = useNavigate()
 
   async function fetchData() {
-    const response = await MessageTemplateData();
+    const response = await MessageTemplateData({ search, status });
     setData(response);
   }
   useEffect(() => {
+    const statusQuery = new URLSearchParams(location.search).get("status");
+    const searchQuery = new URLSearchParams(location.search).get("search");
+    setStatus(statusQuery || "");
+    setSearch(searchQuery || "");
     try {
       fetchData();
     } catch (error: any) {
@@ -41,8 +50,15 @@ const TemplateMessage = () => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [location]);
 
+  const handleSearch = () => {
+    navigate(`?status=${status}&search=${search}`); // Update the URL with the search query and status query parameters
+  };
+
+  const handleRefresh = () => {
+    navigate(`?status=&search=`); // Refresh the page
+  }
   if (loading) {
     return (
       <LayoutPage>
@@ -83,20 +99,29 @@ const TemplateMessage = () => {
             <select
               className="mt-1 block w-full p-2 border border-gray-300 rounded"
               name="status"
-              id="status"
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
             >
               <option value="">Select Status</option>
               <option value="approved">Approved</option>
-              <option value="ongoing">Ongoing</option>
+              <option value="on progress">On Progress</option>
               <option value="rejected">Rejected</option>
             </select>
             <input
               className="mt-1 block w-full p-2 border border-gray-300 rounded"
               placeholder="Search Content or name or body"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
             />
-            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+              onClick={handleSearch}>
               <FontAwesomeIcon icon={faSearch} />
             </button>
+            <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded"
+              onClick={handleRefresh}>
+              <FontAwesomeIcon icon={faRefresh} />
+            </button>
+            
           </div>
         </div>
 
@@ -124,6 +149,15 @@ const TemplateMessage = () => {
             </tr>
           </thead>
           <tbody className="bg-white">
+            {
+              data.length === 0 && (
+                <tr>
+                  <td colSpan={6} className="text-center py-4">
+                    No data available
+                  </td>
+                </tr>
+              )
+            }
             {data.map((item, index) => (
               <tr key={index}>
                 <td className="px-6 py-4 whitespace-no-wrap text-sm  border-b border-gray-200">

@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import LayoutPage from "../general";
 import { USERS_PAGE } from "../../utils/variables/urlPath";
 import { useEffect, useState } from "react";
@@ -16,15 +16,32 @@ interface Users {
 
 const UsersPage = () => {
   const [data, setData] = useState<Users[]>([]);
+  const [search, setSearch] = useState("");
+  const [status, setStatus] = useState("");
+  const location = useLocation();
+  const navigate = useNavigate();
 
   async function fetchData() {
-    const users = await UserData();
+    const users = await UserData({ search, status });
     setData(users);
   }
 
   useEffect(() => {
-    fetchData();
-  }, []);
+    const searchQuery = new URLSearchParams(location.search).get("search");
+    const statusQuery = new URLSearchParams(location.search).get("status");
+    try {
+      setSearch(searchQuery || "");
+      setStatus(statusQuery || "");
+      fetchData();
+
+    }catch(error) {
+      console.error(error);
+    }
+  }, [location]);
+  
+  const handleSearch = () => { 
+    navigate(`?search=${search}&status=${status}`);
+  }
 
   return (
     <LayoutPage>
@@ -34,25 +51,27 @@ const UsersPage = () => {
             to="/whatsapp-number/add"
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
           >
-            <FontAwesomeIcon icon={faPlus} /> Add Token
+            <FontAwesomeIcon icon={faPlus} /> Add User
           </Link>
         </div>
       </div>
       <CardTable>
         <div className="p-6 w-full  flex flex-col justify-between">
           <div className="flex flex-row items-center justify-between gap-2 mb-4">
-            <h1 className="text-xl">Token</h1>
+            <h1 className="text-xl">Users</h1>
             <div className="flex flex-row items-center gap-2">
-              <select className="mt-1 block w-full p-2 border border-gray-300 rounded">
-                <option value="all">All</option>
+              <select className="mt-1 block w-full p-2 border border-gray-300 rounded" onChange={(e) => setStatus(e.target.value)} value={status}>
+                <option value="">All</option>
                 <option value="client">Client</option>
                 <option value="admin">Admin</option>
               </select>
               <input
                 className="mt-1 block w-full p-2 border border-gray-300 rounded"
                 placeholder="Search "
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
               />
-              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onClick={handleSearch}>
                 <FontAwesomeIcon icon={faSearch} />
               </button>
             </div>
