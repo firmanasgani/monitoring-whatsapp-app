@@ -6,9 +6,9 @@ import {
   MESSAGE_TEMPLATE_CONTENT_SID_GET
 } from "../utils/variables/endpoint";
 
-export const MessageTemplateData = async () => {
+export const MessageTemplateData = async (query?: Record<string, string | number>) => {
   try {
-    const response = await apiInterceptors(MESSAGE_TEMPLATE_GET_ALL);
+    const response = await apiInterceptors(MESSAGE_TEMPLATE_GET_ALL, {}, {}, query);
     return response.data;
   } catch (error: any) {
     console.error(error);
