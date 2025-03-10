@@ -1,8 +1,21 @@
 import { Link } from "react-router-dom";
 import LayoutPage from "../general";
-import  { useEffect,useState } from "react";
-import { MessageTemplateData, MessageTemplateDataDelete } from "../../data/messageTemplate";
-import { MESSAGE_TEMPLATE_PAGE_ADD, MESSAGE_TEMPLATE_PAGE } from '../../utils/variables/urlPath'
+import { useEffect, useState } from "react";
+import {
+  MessageTemplateData,
+  MessageTemplateDataDelete,
+} from "../../data/messageTemplate";
+import {
+  MESSAGE_TEMPLATE_PAGE_ADD,
+  MESSAGE_TEMPLATE_PAGE,
+} from "../../utils/variables/urlPath";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEye,
+  faPlus,
+  faSearch,
+  faTrash,
+} from "@fortawesome/free-solid-svg-icons";
 
 interface template_message {
   id: string;
@@ -22,47 +35,71 @@ const TemplateMessage = () => {
   }
   useEffect(() => {
     try {
-      fetchData()
-    }catch(error: any) {
+      fetchData();
+    } catch (error: any) {
       console.error(error);
-    }finally{
+    } finally {
       setLoading(false);
     }
   }, []);
 
-  if(loading) {
+  if (loading) {
     return (
       <LayoutPage>
-      <div className="fixed top-0 left-0 z-50 w-screen h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
-    </LayoutPage>
-    )
+        <div className="fixed top-0 left-0 z-50 w-screen h-screen flex items-center justify-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-blue-500"></div>
+        </div>
+      </LayoutPage>
+    );
   }
 
-  const deleteTemplate = async(id: string) => {
+  const deleteTemplate = async (id: string) => {
     if (window.confirm("Are you sure you want to delete this template?")) {
-     const response = await MessageTemplateDataDelete(id)
-     if(response) {
-       fetchData()
-     }else {
-      console.error("Error deleting template")
-     }
+      const response = await MessageTemplateDataDelete(id);
+      if (response) {
+        fetchData();
+      } else {
+        console.error("Error deleting template");
+      }
     }
   };
   return (
     <LayoutPage>
-      <div className="p-6 bg-white rounded-lg shadow-md mb-4 flex flex-row items-center justify-between">
-        <h2 className="text-xl font-bold">Message template List</h2>
-        <Link
-          to={MESSAGE_TEMPLATE_PAGE_ADD}
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-        >
-          Add template
-        </Link>
+      <div className="p-6 bg-white rounded-lg shadow-md mb-4 flex flex-col justify-between">
+        <div className="flex flex-row items-center justify-between">
+          <Link
+            to={MESSAGE_TEMPLATE_PAGE_ADD}
+            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          >
+            <FontAwesomeIcon icon={faPlus} /> Add Template
+          </Link>
+        </div>
       </div>
 
       <div className="p-6 bg-white rounded-lg shadow-md overflow-y-auto">
+        <div className="flex flex-row items-center justify-between gap-2 mb-8">
+          <h1 className="text-xl">Whatsapp Number</h1>
+          <div className="flex flex-row items-center gap-2">
+            <select
+              className="mt-1 block w-full p-2 border border-gray-300 rounded"
+              name="status"
+              id="status"
+            >
+              <option value="">Select Status</option>
+              <option value="approved">Approved</option>
+              <option value="ongoing">Ongoing</option>
+              <option value="rejected">Rejected</option>
+            </select>
+            <input
+              className="mt-1 block w-full p-2 border border-gray-300 rounded"
+              placeholder="Search Content or name or body"
+            />
+            <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              <FontAwesomeIcon icon={faSearch} />
+            </button>
+          </div>
+        </div>
+
         <table className="w-full">
           <thead>
             <tr>
@@ -102,15 +139,15 @@ const TemplateMessage = () => {
                   {item.body}
                 </td>
                 <td className="px-6 py-4 whitespace-no-wrap text-sm border-b border-gray-200">
-                  {item.status === 'approved' ? (
+                  {item.status === "approved" ? (
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
                       {item.status}
                     </span>
-                  ) : item.status === 'rejected' ? (
+                  ) : item.status === "rejected" ? (
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
                       {item.status}
                     </span>
-                  ) : item.status === 'on requested' ? (
+                  ) : item.status === "on requested" ? (
                     <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                       {item.status}
                     </span>
@@ -122,21 +159,24 @@ const TemplateMessage = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-no-wrap border-b border-gray-200">
                   <div className="flex flex-row gap-4">
-                  {item.status === 'approved' ? ( <Link
-                    to={`${MESSAGE_TEMPLATE_PAGE}/view/${item.id}`}
-                    className="text-gray-500 text-xs hover:text-gray-700"
-                  >
-                    View
-                  </Link>): ""}
-               
-                  <button
-                    onClick={() => deleteTemplate(item.id)}
-                    className="text-red-500 text-xs hover:text-red-700"
-                  >
-                    Delete
-                  </button>
-                    </div>
+                    {item.status === "approved" ? (
+                      <Link
+                        to={`${MESSAGE_TEMPLATE_PAGE}/view/${item.id}`}
+                        className="text-gray-500 text-xs hover:text-gray-700"
+                      >
+                        <FontAwesomeIcon icon={faEye} />
+                      </Link>
+                    ) : (
+                      ""
+                    )}
 
+                    <button
+                      onClick={() => deleteTemplate(item.id)}
+                      className="text-red-500 text-xs hover:text-red-700"
+                    >
+                      <FontAwesomeIcon icon={faTrash} />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}

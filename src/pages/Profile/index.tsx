@@ -9,12 +9,7 @@ export const ProfilePage = () => {
     email: "",
   });
 
-  const [changePassword, setChangePassword] = useState({
-    old_password: "",
-    new_password: "",
-    confirm_password: "",
-  })
-
+ 
   async function fetchData() {
     const response = await ProfileData();
     setProfile(response);

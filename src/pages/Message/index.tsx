@@ -20,7 +20,7 @@ const MessagePage = () => {
   const navigate = useNavigate();
   const [data, setData] = useState<history_message[]>([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState<number>(
+  const [page, _] = useState<number>(
     new URLSearchParams(search).get("page") ? Number(new URLSearchParams(search).get("page")) : 1
   );
   const [limit, setLimit] = useState<number>(

@@ -2,21 +2,22 @@ import LayoutPage from "../general";
 import { useState, useEffect } from "react";
 import { Card, CardTable } from "../../components/Card";
 import { MessageDataHistories } from "../../data/messages";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSearch } from "@fortawesome/free-solid-svg-icons";
 export const MessageDB = () => {
   const [data, setData] = useState<any[]>([]);
   const [total, setTotal] = useState(0);
   const [page, setPage] = useState<number>(1);
   const [limit, setLimit] = useState<number>(10);
-  
 
   async function fetchData(page: number, limit: number) {
     const response = await MessageDataHistories({ page, limit });
-    setTotal(response.total)
-    setData(response.data)
+    setTotal(response.total);
+    setData(response.data);
   }
 
   useEffect(() => {
-    fetchData(page,limit)
+    fetchData(page, limit);
   }, [page, limit]);
 
   const handleSelectLimit = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -25,69 +26,84 @@ export const MessageDB = () => {
 
   return (
     <LayoutPage>
-      <div className="message-db"></div>
-      <Card>
+      <div className="p-6 bg-white rounded-lg shadow-md mb-4 flex flex-col justify-between">
         <h1>Histori Pesan yang terkirim: {total.toLocaleString()} pesan</h1>
-      </Card>
+      </div>
       <CardTable>
-        <table className="w-full h-[350px]">
-          <thead>
-            <tr>
-              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                #
-              </th>
-             
-              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                body
-              </th>
-              <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
-                date created
-              </th>
-             
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((item, index) => (
-              <tr
-                key={index}
-                className="bg-white border-b hover:bg-gray-50"
-              >
-                <td className="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
-                  {index + 1}
-                </td>
-              
-                <td className="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
-                  {item.body.length > 100 ? (
-                    <>
-                      {item.body.substring(0, 100)}<br />
-                      {item.body.substring(100)}
-                    </>
-                  ) : (
-                    item.body
-                  )}
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
-                  {new Date(item.created_at).toLocaleString("en-US", { timeZone: "UTC" })}
-                </td>
-              
+        <div className="p-6 w-full flex flex-col justify-between">
+          <div className="flex flex-row items-center justify-between gap-2 mb-4">
+            <h1 className="text-xl">History Pesan</h1>
+            <div className="flex flex-row items-center gap-2">
+              <input
+                type="date"
+                className="mt-1 block w-full p-2 border border-gray-300 rounded"
+              />
+
+              <input
+                className="mt-1 block w-full p-2 border border-gray-300 rounded"
+                placeholder="Search Body"
+              />
+              <button className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                <FontAwesomeIcon icon={faSearch} />
+              </button>
+            </div>
+          </div>
+          <table className="w-full h-[350px]">
+            <thead>
+              <tr>
+                <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  #
+                </th>
+
+                <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  body
+                </th>
+                <th className="px-6 py-3 text-left text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">
+                  date created
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-     
+            </thead>
+            <tbody>
+              {data.map((item, index) => (
+                <tr key={index} className="bg-white border-b hover:bg-gray-50">
+                  <td className="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
+                    {index + 1}
+                  </td>
+
+                  <td className="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
+                    {item.body.length > 100 ? (
+                      <>
+                        {item.body.substring(0, 100)}
+                        <br />
+                        {item.body.substring(100)}
+                      </>
+                    ) : (
+                      item.body
+                    )}
+                  </td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm leading-5 text-gray-900">
+                    {new Date(item.created_at).toLocaleString("en-US", {
+                      timeZone: "Asia/Jakarta",
+                    })}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </CardTable>
       <div className="flex flex-row w-full justify-between">
-          <select
-            className="py-2 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-32"
-            onChange={handleSelectLimit}
-          >
-            <option value="10">10</option>
-            <option value="20">20</option>
-            <option value="30">30</option>
-            <option value="50">50</option>
-            <option value="100">100</option>
-          </select>
-          <div>
+        <select
+          className="py-2 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 w-32"
+          onChange={handleSelectLimit}
+        >
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="30">30</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+        </select>
+        <div>
           <button
             className="py-2 px-4 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
             onClick={() => setPage(page - 1)}
@@ -105,11 +121,8 @@ export const MessageDB = () => {
           >
             Next
           </button>
-          </div>
         </div>
+      </div>
     </LayoutPage>
   );
 };
-
-
-
